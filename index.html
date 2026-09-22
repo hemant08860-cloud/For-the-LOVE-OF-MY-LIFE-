@@ -4,201 +4,481 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Project AYE AYE MADAM 🫡</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <!-- Google Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>
+        Project AYE AYE MADAM 🫡
+    </title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/style.css">
+    <!-- ==================================================
+         FONTS
+    =================================================== -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Caveat:wght@400;500;600&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- ==================================================
+         STYLESHEET
+    =================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
 
 </head>
 
+
 <body>
 
-<!-- ========================= -->
-<!-- Countdown Screen -->
-<!-- ========================= -->
 
-<section id="countdown-screen">
+    <!-- ==================================================
+         ATMOSPHERE
+    =================================================== -->
 
-    <div class="background"></div>
+    <div id="atmosphere">
 
-    <div class="glass-card">
+        <div class="background"></div>
 
-        <h3>🌸 A Special Day Is Coming</h3>
+        <div id="sparkle-layer"></div>
 
-        <div class="countdown-container">
-
-    <div class="time-box">
-
-        <span id="days">00</span>
-
-        <small>Days</small>
+        <div id="petal-layer"></div>
 
     </div>
 
-    <div class="time-box">
 
-        <span id="hours">00</span>
 
-        <small>Hours</small>
+    <!-- ==================================================
+         COUNTDOWN SCREEN
+    =================================================== -->
 
-    </div>
+    <main id="countdown-screen">
 
-    <div class="time-box">
 
-        <span id="minutes">00</span>
+        <!-- ==================================================
+             MAIN GLASS PANEL
+        =================================================== -->
 
-        <small>Minutes</small>
+        <section class="glass-card">
 
-    </div>
 
-    <div class="time-box">
+            <!-- ==================================================
+                 HEADING
+            =================================================== -->
 
-        <span id="seconds">00</span>
+            <header class="countdown-header">
 
-        <small>Seconds</small>
+                <h1>
 
-    </div>
+                    <span class="heading-flower">
+                        🌸
+                    </span>
+
+                    A Special Day Is Coming
+
+                </h1>
+
+
+                <p class="countdown-subtitle">
+
+                    Just a little more time...
+
+                </p>
+
+
+                <div class="heading-heart">
+
+                    ♡
+
+                </div>
+
+            </header>
+
+
+
+            <!-- ==================================================
+                 COUNTDOWN ENVELOPES
+            =================================================== -->
+
+            <section
+                class="countdown-container"
+                aria-label="Birthday countdown"
+            >
+
+
+                <!-- DAYS -->
+
+                <article
+                    class="time-box envelope"
+                    data-surface="days"
+                >
+
+                    <div class="envelope-flap"></div>
+
+                    <div class="envelope-fold"></div>
+
+                    <div class="wax-seal">
+
+                        <span>♥</span>
+
+                    </div>
+
+
+                    <div class="time-content">
+
+                        <span
+                            id="days"
+                            class="time-number"
+                        >
+                            000
+                        </span>
+
+                        <small>
+                            Days
+                        </small>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- HOURS -->
+
+                <article
+                    class="time-box envelope"
+                    data-surface="hours"
+                >
+
+                    <div class="envelope-flap"></div>
+
+                    <div class="envelope-fold"></div>
+
+                    <div class="wax-seal">
+
+                        <span>♥</span>
+
+                    </div>
+
+
+                    <div class="time-content">
+
+                        <span
+                            id="hours"
+                            class="time-number"
+                        >
+                            00
+                        </span>
+
+                        <small>
+                            Hours
+                        </small>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- MINUTES -->
+
+                <article
+                    class="time-box envelope"
+                    data-surface="minutes"
+                >
+
+                    <div class="envelope-flap"></div>
+
+                    <div class="envelope-fold"></div>
+
+                    <div class="wax-seal">
+
+                        <span>♥</span>
+
+                    </div>
+
+
+                    <div class="time-content">
+
+                        <span
+                            id="minutes"
+                            class="time-number"
+                        >
+                            00
+                        </span>
+
+                        <small>
+                            Minutes
+                        </small>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- SECONDS -->
+
+                <article
+                    class="time-box envelope"
+                    data-surface="seconds"
+                >
+
+                    <div class="envelope-flap"></div>
+
+                    <div class="envelope-fold"></div>
+
+                    <div class="wax-seal">
+
+                        <span>♥</span>
+
+                    </div>
+
+
+                    <div class="time-content">
+
+                        <span
+                            id="seconds"
+                            class="time-number"
+                        >
+                            00
+                        </span>
+
+                        <small>
+                            Seconds
+                        </small>
+
+                    </div>
+
+                </article>
+
+
+            </section>
+
+
+
+            <!-- ==================================================
+                 WAITING MESSAGE
+            =================================================== -->
+
+            <p id="countdown-text">
+
+                This little project is patiently waiting
+                for the right moment.
+
+            </p>
+
+
+
+            <!-- ==================================================
+                 HERO NOTE
+            =================================================== -->
+
+            <article
+                class="hero-note"
+                data-surface="hero-note"
+            >
+
+
+                <div class="note-paper-shine"></div>
+
+
+                <div class="note-title">
+
+                    <span>
+                        💌
+                    </span>
+
+                    A Message From Your HERO
+
+                </div>
+
+
+                <div class="note-content">
+
+                    <p>
+
+                        Be ready to
+
+                        <strong>
+                            LOSE THE BET!
+                        </strong>
+
+                        ❤️
+
+                    </p>
+
+
+                    <p>
+
+                        Your HERO has a surprise
+                        planned for his beloved.
+
+                        😍
+
+                    </p>
+
+                </div>
+
+
+            </article>
+
+
+
+            <!-- ==================================================
+                 UNLOCK
+            =================================================== -->
+
+            <div class="unlock-box">
+
+                <span>
+                    🔒
+                </span>
+
+                Unlocks on
+
+                <strong>
+                    16 January
+                </strong>
+
+            </div>
+
+
+
+            <!-- ==================================================
+                 FOOTER MESSAGE
+            =================================================== -->
+
+            <footer class="wait-message">
+
+                <span class="line"></span>
+
+                <span class="footer-heart">
+                    ♥
+                </span>
+
+                <span class="line"></span>
+
+
+                <p>
+                    SOME MOMENTS ARE WORTH THE WAIT
+                </p>
+
+            </footer>
+
+
+        </section>
+
+    </main>
+
+
+
+    <!-- ==================================================
+         LOADER
+    =================================================== -->
+
+    <section id="loader">
+
+        <div class="background"></div>
+
+
+        <div class="loader-card">
+
+
+            <div class="emoji">
+
+                🫡
+
+            </div>
+
+
+            <h1>
+
+                PROJECT
+
+            </h1>
+
+
+            <h2>
+
+                AYE AYE MADAM!!
+
+            </h2>
+
+
+            <p id="loadingMessage">
+
+                Initializing Mission...
+
+            </p>
+
+
+            <div class="progress">
+
+                <div class="progress-bar"></div>
+
+            </div>
+
+
+            <div class="status">
+
+                Mission ID : AAM-1601
+
+                <br>
+
+                Status : Active
+
+            </div>
+
 
         </div>
 
-        <p id="countdown-text">
+    </section>
 
-    This little project is patiently waiting
-    for the right moment.
 
-</p>
 
-<div class="hero-note">
+    <!-- ==================================================
+         FUTURE BIRTHDAY EXPERIENCE
+    =================================================== -->
 
-    <div class="note-title">
-
-        💌 A message from your HERO
-
-    </div>
-
-    <p class="note-text">
-
-        Be ready to <strong>LOSE THE BET!</strong> ❤️<br><br>
-
-        Your HERO has a surprise planned
-        for his beloved. 😍
-
-    </p>
-
-</div>
-
-        <div class="unlock-box">
-
-            🔒 Unlocks on
-
-            <strong>
-
-                16 January
-
-            </strong>
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- ========================= -->
-<!-- Loader -->
-<!-- ========================= -->
-
-<section id="loader">
-
-    <div class="background"></div>
-
-    <div class="loader-card">
-
-        <div class="emoji">
-
-            🫡
-
-        </div>
+    <section id="hero">
 
         <h1>
 
-            PROJECT
+            Happy Birthday 🌸
 
         </h1>
 
-        <h2>
+    </section>
 
-            AYE AYE MADAM!!
 
-        </h2>
 
-        <p id="loadingMessage">
+    <!-- ==================================================
+         JAVASCRIPT
+    =================================================== -->
 
-            Initializing Mission...
+    <script src="js/script.js"></script>
 
-        </p>
-
-        <div class="progress">
-
-            <div class="progress-bar"></div>
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- ========================= -->
-<!-- Hero -->
-<!-- ========================= -->
-
-<section id="hero">
-
-    <h1>
-
-        Happy Birthday 🌸
-
-    </h1>
-
-</section>
-
-<!-- JavaScript -->
-
-<script src="js/script.js"></script>
 
 </body>
 
-</html>        <div class="progress">
-
-            <div class="progress-bar"></div>
-
-        </div>
-
-        <div class="status">
-
-            Mission ID : AAM-1601<br>
-            Status : Active
-
-        </div>
-
-    </div>
-
-</div>
-
-<section id="hero">
-
-    <h1>Happy Birthday 🌸</h1>
-
-</section>
-
-<script src="js/script.js"></script>
-
-</body>
 </html>
