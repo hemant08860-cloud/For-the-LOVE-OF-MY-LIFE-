@@ -1,7 +1,7 @@
 /* ========================================================
    PROJECT AYE AYE MADAM 🫡
-   Version 0.6.2
-   OPTIMIZED PETAL PHYSICS
+   Version 0.8.0
+   MOBILE-FIRST PETAL ENGINE
 ======================================================== */
 
 
@@ -30,25 +30,20 @@ function animateNumber(element){
     if(!element) return;
 
     element.animate(
-
         [
             {
                 opacity:.45,
                 transform:"translateY(-3px) scale(.97)"
             },
-
             {
                 opacity:1,
                 transform:"translateY(0) scale(1)"
             }
-
         ],
-
         {
             duration:260,
             easing:"ease-out"
         }
-
     );
 
 }
@@ -155,7 +150,7 @@ updateCountdown();
 
 
 /* ========================================================
-   PARTICLE LAYERS
+   LAYERS
 ======================================================== */
 
 const petalLayer =
@@ -170,48 +165,302 @@ const sparkleLayer =
 
 
 /* ========================================================
-   OPTIMIZED PHYSICS SETTINGS
+   DEVICE PERFORMANCE
+======================================================== */
+
+const connection =
+    navigator.connection ||
+    navigator.mozConnection ||
+    navigator.webkitConnection;
+
+
+const reducedMotion =
+    window.matchMedia &&
+    window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+
+const hardwareCores =
+    navigator.hardwareConcurrency || 4;
+
+
+const memory =
+    navigator.deviceMemory || 4;
+
+
+/*
+   Detect whether this looks like
+   a mobile device.
+*/
+
+const isMobile =
+    /Android|iPhone|iPad|iPod/i.test(
+        navigator.userAgent
+    );
+
+
+/*
+   Very conservative performance
+   classification.
+
+   We deliberately don't assume that
+   every modern phone is powerful.
+*/
+
+let performanceLevel =
+    "mid";
+
+
+if(
+    memory >= 8 &&
+    hardwareCores >= 8
+){
+
+    performanceLevel =
+        "high";
+
+}
+else if(
+    memory <= 3 ||
+    hardwareCores <= 4
+){
+
+    performanceLevel =
+        "low";
+
+}
+
+
+/*
+   Mobile devices get a slightly
+   more conservative profile.
+*/
+
+if(
+    isMobile &&
+    performanceLevel === "high"
+){
+
+    performanceLevel =
+        "mid";
+
+}
+
+
+/* ========================================================
+   PERFORMANCE PROFILE
+======================================================== */
+
+const PERFORMANCE = {
+
+    high: {
+
+        petals:10,
+
+        physicsFPS:30,
+
+        textureSize:20
+
+    },
+
+    mid: {
+
+        petals:7,
+
+        physicsFPS:30,
+
+        textureSize:18
+
+    },
+
+    low: {
+
+        petals:4,
+
+        physicsFPS:24,
+
+        textureSize:16
+
+    }
+
+};
+
+
+let profile =
+    PERFORMANCE[
+        performanceLevel
+    ];
+
+
+/*
+   Reduced motion means:
+   keep a tiny number of petals
+   or remove them completely.
+*/
+
+if(reducedMotion){
+
+    profile = {
+
+        petals:2,
+
+        physicsFPS:18,
+
+        textureSize:14
+
+    };
+
+}
+
+
+/* ========================================================
+   CANVAS
+======================================================== */
+
+let canvas = null;
+let ctx = null;
+
+let canvasWidth = 0;
+let canvasHeight = 0;
+
+
+/* ========================================================
+   PETAL TEXTURE
+======================================================== */
+
+let petalTexture = null;
+
+
+function createPetalTexture(){
+
+    const size =
+        profile.textureSize;
+
+
+    const texture =
+        document.createElement(
+            "canvas"
+        );
+
+
+    texture.width =
+        size;
+
+    texture.height =
+        size;
+
+
+    const textureCtx =
+        texture.getContext(
+            "2d"
+        );
+
+
+    /*
+       Extremely simple geometry.
+
+       No gradients.
+       No shadows.
+       No blur.
+    */
+
+    textureCtx.beginPath();
+
+
+    textureCtx.moveTo(
+        size * .50,
+        size * .08
+    );
+
+
+    textureCtx.quadraticCurveTo(
+
+        size * .86,
+        size * .28,
+
+        size * .70,
+        size * .68
+
+    );
+
+
+    textureCtx.quadraticCurveTo(
+
+        size * .58,
+        size * .90,
+
+        size * .50,
+        size * .94
+
+    );
+
+
+    textureCtx.quadraticCurveTo(
+
+        size * .42,
+        size * .90,
+
+        size * .30,
+        size * .68
+
+    );
+
+
+    textureCtx.quadraticCurveTo(
+
+        size * .14,
+        size * .28,
+
+        size * .50,
+        size * .08
+
+    );
+
+
+    textureCtx.closePath();
+
+
+    textureCtx.fillStyle =
+        "rgba(255,178,205,.82)";
+
+
+    textureCtx.fill();
+
+
+    petalTexture =
+        texture;
+
+}
+
+
+/* ========================================================
+   PHYSICS
 ======================================================== */
 
 const PHYSICS = {
 
-    /*
-       Fewer petals = smoother mobile performance.
-    */
+    petalCount:
+        profile.petals,
 
-    petalCount:10,
+    physicsFPS:
+        profile.physicsFPS,
 
-    gravity:13,
+    gravity:10,
 
-    fallSpeed:22,
+    initialFallSpeed:16,
 
-    maxFallSpeed:72,
+    maxFallSpeed:58,
 
-    wind:2.2,
+    wind:1.1,
 
-    drift:7,
+    drift:2.5,
 
-    airResistance:.992,
+    airResistance:.996,
 
-    /*
-       How strongly a surface pushes
-       the petal sideways.
-    */
+    deflection:16,
 
-    deflection:28,
-
-    /*
-       Tiny upward response.
-    */
-
-    bounce:.12,
-
-    /*
-       Prevents a petal from immediately
-       colliding with the same surface again.
-    */
-
-    collisionCooldown:.18
+    bounce:.06
 
 };
 
@@ -222,16 +471,28 @@ const PHYSICS = {
 
 const petals = [];
 
-
-/* ========================================================
-   COLLISION SURFACES
-======================================================== */
-
 const surfaces = [];
 
 
 /* ========================================================
-   RANDOM
+   TIMING
+======================================================== */
+
+const PHYSICS_STEP =
+    1 /
+    PHYSICS.physicsFPS;
+
+
+let accumulator =
+    0;
+
+
+let lastTime =
+    performance.now();
+
+
+/* ========================================================
+   HELPERS
 ======================================================== */
 
 function random(min,max){
@@ -245,7 +506,89 @@ function random(min,max){
 
 
 /* ========================================================
-   BUILD SURFACE CACHE
+   CANVAS SETUP
+======================================================== */
+
+function setupCanvas(){
+
+    if(!petalLayer) return;
+
+
+    petalLayer.innerHTML = "";
+
+
+    canvas =
+        document.createElement(
+            "canvas"
+        );
+
+
+    canvas.id =
+        "petal-canvas";
+
+
+    petalLayer.appendChild(
+        canvas
+    );
+
+
+    ctx =
+        canvas.getContext(
+            "2d"
+        );
+
+
+    createPetalTexture();
+
+    resizeCanvas();
+
+}
+
+
+/* ========================================================
+   RESIZE
+======================================================== */
+
+function resizeCanvas(){
+
+    if(!canvas) return;
+
+
+    canvasWidth =
+        window.innerWidth;
+
+    canvasHeight =
+        window.innerHeight;
+
+
+    /*
+       1× rendering is intentional.
+
+       This is one of the biggest
+       mobile GPU savings.
+    */
+
+    canvas.width =
+        canvasWidth;
+
+    canvas.height =
+        canvasHeight;
+
+
+    canvas.style.width =
+        canvasWidth + "px";
+
+    canvas.style.height =
+        canvasHeight + "px";
+
+
+    updateSurfaceCache();
+
+}
+
+
+/* ========================================================
+   SURFACE CACHE
 ======================================================== */
 
 function updateSurfaceCache(){
@@ -259,66 +602,34 @@ function updateSurfaceCache(){
         );
 
 
-    elements.forEach(
-        element=>{
+    for(
+        let i = 0;
+        i < elements.length;
+        i++
+    ){
 
-            const rect =
-                element.getBoundingClientRect();
-
-
-            surfaces.push({
-
-                element,
-
-                left:
-                    rect.left - 3,
-
-                right:
-                    rect.right + 3,
-
-                top:
-                    rect.top - 3,
-
-                bottom:
-                    rect.bottom + 3
-
-            });
-
-        }
-    );
-
-}
+        const rect =
+            elements[i]
+                .getBoundingClientRect();
 
 
-/* ========================================================
-   CREATE PETAL ELEMENT
-======================================================== */
+        surfaces.push({
 
-function createPetalElement(){
+            element:
+                elements[i],
 
-    const element =
-        document.createElement("div");
+            left:
+                rect.left,
 
+            right:
+                rect.right,
 
-    element.className =
-        "petal";
+            top:
+                rect.top
 
+        });
 
-    /*
-       JavaScript controls the complete
-       position of the petal.
-    */
-
-    element.style.top = "0";
-    element.style.left = "0";
-
-
-    petalLayer.appendChild(
-        element
-    );
-
-
-    return element;
+    }
 
 }
 
@@ -329,101 +640,89 @@ function createPetalElement(){
 
 function createPetal(){
 
-    const element =
-        createPetalElement();
+    const x =
+        random(
+            0,
+            canvasWidth
+        );
 
 
-    const petal = {
+    const y =
+        random(
+            -canvasHeight,
+            -20
+        );
 
-        element,
 
-        x:
-            random(
-                0,
-                window.innerWidth
-            ),
+    const size =
+        random(
+            .75,
+            1
+        );
 
-        y:
-            random(
-                -window.innerHeight,
-                -20
-            ),
+
+    petals.push({
+
+        x,
+
+        y,
+
+        previousX:
+            x,
+
+        previousY:
+            y,
 
         vx:
-            random(-2.5,2.5),
+            random(
+                -1.4,
+                1.4
+            ),
 
         vy:
             random(
-                14,
-                PHYSICS.fallSpeed
+                10,
+                PHYSICS.initialFallSpeed
             ),
 
         width:
-            random(10,16),
+            14 * size,
 
         height:
-            random(14,22),
+            18 * size,
 
         rotation:
-            random(0,360),
+            random(
+                0,
+                Math.PI * 2
+            ),
+
+        previousRotation:
+            0,
 
         spin:
-            random(-22,22),
+            random(
+                -.65,
+                .65
+            ),
 
         opacity:
-            random(.48,.70),
+            random(
+                .48,
+                .66
+            ),
 
         age:
-            random(0,8),
+            random(
+                0,
+                10
+            ),
 
         cooldown:0,
 
-        /*
-           Prevents the same surface from
-           immediately catching the petal again.
-        */
-
         lastSurface:null
 
-    };
-
-
-    element.style.width =
-        petal.width + "px";
-
-    element.style.height =
-        petal.height + "px";
-
-    element.style.opacity =
-        petal.opacity;
-
-
-    renderPetal(
-        petal
-    );
-
-
-    petals.push(
-        petal
-    );
-
-}
-
-
-/* ========================================================
-   RENDER
-======================================================== */
-
-function renderPetal(petal){
-
-    petal.element.style.transform =
-
-        `translate3d(
-            ${petal.x}px,
-            ${petal.y}px,
-            0
-        )
-        rotate(${petal.rotation}deg)`;
+    });
 
 }
 
@@ -434,6 +733,9 @@ function renderPetal(petal){
 
 function initializePetals(){
 
+    petals.length = 0;
+
+
     for(
         let i = 0;
         i < PHYSICS.petalCount;
@@ -441,6 +743,18 @@ function initializePetals(){
     ){
 
         createPetal();
+
+    }
+
+
+    for(
+        let i = 0;
+        i < petals.length;
+        i++
+    ){
+
+        petals[i].previousRotation =
+            petals[i].rotation;
 
     }
 
@@ -453,14 +767,8 @@ function initializePetals(){
 
 function checkCollision(
     petal,
-    previousX,
     previousY
 ){
-
-    /*
-       Only petals travelling downward
-       can hit the top of our surfaces.
-    */
 
     if(
         petal.vy <= 0
@@ -471,20 +779,14 @@ function checkCollision(
     }
 
 
-    /*
-       Approximate petal bottom.
-       This is dramatically cheaper than
-       creating DOM rectangles every frame.
-    */
-
     const previousBottom =
         previousY +
-        petal.height / 2;
+        petal.height * .5;
 
 
     const currentBottom =
         petal.y +
-        petal.height / 2;
+        petal.height * .5;
 
 
     for(
@@ -497,11 +799,6 @@ function checkCollision(
             surfaces[i];
 
 
-        /*
-           Skip the surface that just
-           deflected this petal.
-        */
-
         if(
             petal.lastSurface ===
             surface.element
@@ -513,38 +810,16 @@ function checkCollision(
 
 
         /*
-           Has the petal crossed the
-           surface's top edge?
-        */
-
-        const crossedTop =
-
-            previousBottom <=
-                surface.top &&
-
-            currentBottom >=
-                surface.top;
-
-
-        if(!crossedTop){
-
-            continue;
-
-        }
-
-
-        /*
-           Is the petal horizontally
-           above the surface?
+           Did the petal cross
+           the top edge?
         */
 
         if(
-            petal.x <
-                surface.left ||
+            previousBottom >
+            surface.top ||
 
-            petal.x >
-                surface.right
-
+            currentBottom <
+            surface.top
         ){
 
             continue;
@@ -553,86 +828,71 @@ function checkCollision(
 
 
         /*
-           COLLISION FOUND.
+           Horizontal collision.
         */
+
+        if(
+            petal.x <
+            surface.left ||
+
+            petal.x >
+            surface.right
+        ){
+
+            continue;
+
+        }
 
 
         const center =
             (
                 surface.left +
                 surface.right
-            ) / 2;
+            ) * .5;
 
 
-        let direction;
-
-
-        /*
-           Push away from the part
-           of the surface that was hit.
-        */
-
-        if(
+        const direction =
             petal.x < center
-        ){
+                ? -1
+                : 1;
 
-            direction = -1;
-
-        }
-        else if(
-            petal.x > center
-        ){
-
-            direction = 1;
-
-        }
-        else{
-
-            direction =
-                Math.random() > .5
-                    ? 1
-                    : -1;
-
-        }
-
-
-        /*
-           Distance from center gives
-           slightly stronger edge deflection.
-        */
 
         const halfWidth =
-            (
-                surface.right -
-                surface.left
-            ) / 2;
+            Math.max(
+                1,
+                (
+                    surface.right -
+                    surface.left
+                ) * .5
+            );
 
 
         const offset =
-            Math.abs(
-                petal.x - center
-            ) /
-            halfWidth;
-
-
-        const push =
-            PHYSICS.deflection *
-            (
-                .72 +
-                offset * .55
+            Math.min(
+                1,
+                Math.abs(
+                    petal.x -
+                    center
+                ) /
+                halfWidth
             );
 
 
         /*
-           SIDEWAYS DEFLECTION
+           Soft sideways deflection.
         */
 
         petal.vx +=
-            direction * push;
+            direction *
+            PHYSICS.deflection *
+            (
+                .45 +
+                offset * .25
+            );
 
 
         /*
-           Small upward reaction.
+           Tiny bounce.
         */
 
         petal.vy =
@@ -643,36 +903,22 @@ function checkCollision(
 
 
         /*
-           Place petal just above
-           the surface.
-
-           This is critical:
-           it prevents it from being
-           rendered INSIDE the envelope.
+           Place above surface.
         */
 
         petal.y =
             surface.top -
-            petal.height / 2 -
+            petal.height * .5 -
             1;
 
 
-        /*
-           Give the petal a little
-           rotational reaction.
-        */
-
         petal.spin +=
             direction *
-            random(7,16);
+            .18;
 
-
-        /*
-           Collision cooldown.
-        */
 
         petal.cooldown =
-            PHYSICS.collisionCooldown;
+            .20;
 
 
         petal.lastSurface =
@@ -695,6 +941,16 @@ function updatePetal(
     delta
 ){
 
+    petal.previousX =
+        petal.x;
+
+    petal.previousY =
+        petal.y;
+
+    petal.previousRotation =
+        petal.rotation;
+
+
     petal.age +=
         delta;
 
@@ -716,36 +972,28 @@ function updatePetal(
 
 
     /*
-       Gentle wind.
+       Very subtle wind.
     */
 
     petal.vx +=
-
         Math.sin(
-            petal.age *
-            .65
+            petal.age * .6
         ) *
-
         PHYSICS.wind *
-
         delta;
 
 
     /*
-       Natural sideways drift.
+       Natural drift.
     */
 
     petal.vx +=
-
         Math.sin(
-            petal.age *
-            .9
+            petal.age * .8
         ) *
-
         PHYSICS.drift *
-
         delta *
-        .025;
+        .02;
 
 
     /*
@@ -758,7 +1006,7 @@ function updatePetal(
 
 
     /*
-       Air resistance.
+       Damping.
     */
 
     petal.vx *=
@@ -776,17 +1024,6 @@ function updatePetal(
 
 
     /*
-       Save previous position.
-    */
-
-    const previousX =
-        petal.x;
-
-    const previousY =
-        petal.y;
-
-
-    /*
        Move.
     */
 
@@ -794,14 +1031,11 @@ function updatePetal(
         petal.vx *
         delta;
 
+
     petal.y +=
         petal.vy *
         delta;
 
-
-    /*
-       Rotate.
-    */
 
     petal.rotation +=
         petal.spin *
@@ -818,45 +1052,51 @@ function updatePetal(
 
         checkCollision(
             petal,
-            previousX,
-            previousY
+            petal.previousY
         );
 
     }
 
 
     /*
-       Horizontal wrap.
+       Horizontal wrapping.
     */
 
     if(
-        petal.x < -40
+        petal.x <
+        -40
     ){
 
         petal.x =
-            window.innerWidth + 30;
+            canvasWidth + 20;
+
+        petal.previousX =
+            petal.x;
 
     }
 
 
     if(
         petal.x >
-        window.innerWidth + 40
+        canvasWidth + 40
     ){
 
-        petal.x = -30;
+        petal.x =
+            -20;
+
+        petal.previousX =
+            petal.x;
 
     }
 
 
     /*
-       Recycle after leaving
-       bottom of screen.
+       Recycle.
     */
 
     if(
         petal.y >
-        window.innerHeight + 50
+        canvasHeight + 40
     ){
 
         respawnPetal(
@@ -864,11 +1104,6 @@ function updatePetal(
         );
 
     }
-
-
-    renderPetal(
-        petal
-    );
 
 }
 
@@ -881,41 +1116,70 @@ function respawnPetal(
     petal
 ){
 
-    petal.x =
+    const x =
         random(
             0,
-            window.innerWidth
+            canvasWidth
         );
 
 
-    petal.y =
+    const y =
         random(
-            -80,
+            -100,
             -20
         );
 
 
+    petal.x =
+        x;
+
+    petal.previousX =
+        x;
+
+    petal.y =
+        y;
+
+    petal.previousY =
+        y;
+
+
     petal.vx =
-        random(-2.5,2.5);
+        random(
+            -1.4,
+            1.4
+        );
 
 
     petal.vy =
         random(
-            14,
-            PHYSICS.fallSpeed
+            10,
+            PHYSICS.initialFallSpeed
         );
 
 
     petal.rotation =
-        random(0,360);
+        random(
+            0,
+            Math.PI * 2
+        );
+
+
+    petal.previousRotation =
+        petal.rotation;
 
 
     petal.spin =
-        random(-22,22);
+        random(
+            -.65,
+            .65
+        );
 
 
     petal.age =
-        random(0,5);
+        random(
+            0,
+            5
+        );
 
 
     petal.cooldown =
@@ -929,40 +1193,111 @@ function respawnPetal(
 
 
 /* ========================================================
-   PHYSICS LOOP
+   DRAW PETAL
 ======================================================== */
 
-let lastTime =
-    performance.now();
-
-
-function physicsLoop(
-    currentTime
+function drawPetal(
+    petal,
+    interpolation
 ){
 
-    const delta =
-        Math.min(
-            (
-                currentTime -
-                lastTime
-            ) / 1000,
-
-            .033
-        );
+    const x =
+        petal.previousX +
+        (
+            petal.x -
+            petal.previousX
+        ) *
+        interpolation;
 
 
-    lastTime =
-        currentTime;
+    const y =
+        petal.previousY +
+        (
+            petal.y -
+            petal.previousY
+        ) *
+        interpolation;
+
+
+    const rotation =
+        petal.previousRotation +
+        (
+            petal.rotation -
+            petal.previousRotation
+        ) *
+        interpolation;
+
+
+    ctx.globalAlpha =
+        petal.opacity;
+
+
+    ctx.save();
+
+
+    ctx.translate(
+        x,
+        y
+    );
+
+
+    ctx.rotate(
+        rotation
+    );
 
 
     /*
-       Cache ALL collision rectangles
-       only once per frame.
-
-       This is the major performance fix.
+       Cached texture.
     */
 
-    updateSurfaceCache();
+    ctx.drawImage(
+
+        petalTexture,
+
+        -petal.width * .5,
+
+        -petal.height * .5,
+
+        petal.width,
+
+        petal.height
+
+    );
+
+
+    ctx.restore();
+
+}
+
+
+/* ========================================================
+   DRAW
+======================================================== */
+
+function drawPetals(
+    interpolation
+){
+
+    if(
+        !ctx ||
+        !petalTexture
+    ){
+
+        return;
+
+    }
+
+
+    ctx.clearRect(
+        0,
+        0,
+        canvasWidth,
+        canvasHeight
+    );
+
+
+    ctx.globalAlpha =
+        1;
 
 
     for(
@@ -971,16 +1306,90 @@ function physicsLoop(
         i++
     ){
 
-        updatePetal(
+        drawPetal(
             petals[i],
-            delta
+            interpolation
         );
 
     }
 
 
+    ctx.globalAlpha =
+        1;
+
+}
+
+
+/* ========================================================
+   ANIMATION LOOP
+======================================================== */
+
+function petalLoop(
+    currentTime
+){
+
+    const elapsed =
+        Math.min(
+            (
+                currentTime -
+                lastTime
+            ) / 1000,
+            .10
+        );
+
+
+    lastTime =
+        currentTime;
+
+
+    accumulator +=
+        elapsed;
+
+
+    /*
+       Fixed physics.
+
+       Rendering continues at the
+       device's native refresh rate.
+    */
+
+    while(
+        accumulator >=
+        PHYSICS_STEP
+    ){
+
+        for(
+            let i = 0;
+            i < petals.length;
+            i++
+        ){
+
+            updatePetal(
+                petals[i],
+                PHYSICS_STEP
+            );
+
+        }
+
+
+        accumulator -=
+            PHYSICS_STEP;
+
+    }
+
+
+    const interpolation =
+        accumulator /
+        PHYSICS_STEP;
+
+
+    drawPetals(
+        interpolation
+    );
+
+
     requestAnimationFrame(
-        physicsLoop
+        petalLoop
     );
 
 }
@@ -992,51 +1401,16 @@ function physicsLoop(
 
 function createSparkles(){
 
-    const count =
-        22;
+    /*
+       Disabled intentionally.
 
+       Petals are the only atmospheric
+       particle effect for now.
+    */
 
-    for(
-        let i = 0;
-        i < count;
-        i++
-    ){
+    if(!sparkleLayer) return;
 
-        const sparkle =
-            document.createElement(
-                "span"
-            );
-
-
-        sparkle.className =
-            "sparkle";
-
-
-        sparkle.style.left =
-            random(0,100) +
-            "vw";
-
-
-        sparkle.style.top =
-            random(0,100) +
-            "vh";
-
-
-        sparkle.style.setProperty(
-            "--duration",
-            random(3,6) + "s"
-        );
-
-
-        sparkle.style.animationDelay =
-            random(0,5) + "s";
-
-
-        sparkleLayer.appendChild(
-            sparkle
-        );
-
-    }
+    sparkleLayer.innerHTML = "";
 
 }
 
@@ -1048,7 +1422,7 @@ function createSparkles(){
 window.addEventListener(
     "resize",
     ()=>{
-        updateSurfaceCache();
+        resizeCanvas();
     }
 );
 
@@ -1238,19 +1612,24 @@ window.addEventListener(
     "load",
     ()=>{
 
-        /*
-           Build collision geometry
-           before the first frame.
-        */
+        setupCanvas();
 
         updateSurfaceCache();
 
-        createSparkles();
-
         initializePetals();
 
+        createSparkles();
+
+
+        lastTime =
+            performance.now();
+
+        accumulator =
+            0;
+
+
         requestAnimationFrame(
-            physicsLoop
+            petalLoop
         );
 
     }
