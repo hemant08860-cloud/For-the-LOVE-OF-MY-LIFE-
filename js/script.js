@@ -1,7 +1,7 @@
 /* ========================================================
    PROJECT AYE AYE MADAM 🫡
-   Version 0.8.0
-   MOBILE-FIRST PETAL ENGINE
+   Version 0.9.0
+   MOBILE-FIRST PERFORMANCE ENGINE
 ======================================================== */
 
 
@@ -165,23 +165,26 @@ const sparkleLayer =
 
 
 /* ========================================================
-   DEVICE PERFORMANCE
+   DEVICE DETECTION
 ======================================================== */
 
-const connection =
-    navigator.connection ||
-    navigator.mozConnection ||
-    navigator.webkitConnection;
+const userAgent =
+    navigator.userAgent || "";
 
 
-const reducedMotion =
-    window.matchMedia &&
-    window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-    ).matches;
+const isMobile =
+    /Android|iPhone|iPad|iPod/i.test(
+        userAgent
+    );
 
 
-const hardwareCores =
+const isRedmi =
+    /Redmi|Miui|Xiaomi/i.test(
+        userAgent
+    );
+
+
+const cores =
     navigator.hardwareConcurrency || 4;
 
 
@@ -190,113 +193,132 @@ const memory =
 
 
 /*
-   Detect whether this looks like
-   a mobile device.
+   Respect the user's accessibility
+   preference.
 */
 
-const isMobile =
-    /Android|iPhone|iPad|iPod/i.test(
-        navigator.userAgent
-    );
-
-
-/*
-   Very conservative performance
-   classification.
-
-   We deliberately don't assume that
-   every modern phone is powerful.
-*/
-
-let performanceLevel =
-    "mid";
-
-
-if(
-    memory >= 8 &&
-    hardwareCores >= 8
-){
-
-    performanceLevel =
-        "high";
-
-}
-else if(
-    memory <= 3 ||
-    hardwareCores <= 4
-){
-
-    performanceLevel =
-        "low";
-
-}
-
-
-/*
-   Mobile devices get a slightly
-   more conservative profile.
-*/
-
-if(
-    isMobile &&
-    performanceLevel === "high"
-){
-
-    performanceLevel =
-        "mid";
-
-}
+const reducedMotion =
+    window.matchMedia &&
+    window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+    ).matches;
 
 
 /* ========================================================
    PERFORMANCE PROFILE
 ======================================================== */
 
+let MOBILE_MODE =
+    isMobile;
+
+
+/*
+   Redmi is explicitly treated as
+   mobile-performance mode.
+
+   This isn't because every Redmi is slow.
+   It's simply our chosen baseline device.
+*/
+
+if(isRedmi){
+
+    MOBILE_MODE = true;
+
+}
+
+
+/* ========================================================
+   PETAL SETTINGS
+======================================================== */
+
 const PERFORMANCE = {
 
-    high: {
+    desktop: {
 
-        petals:10,
+        petals:9,
 
-        physicsFPS:30,
+        physicsFPS:60,
 
-        textureSize:20
+        textureSize:20,
+
+        rotation:true,
+
+        interpolation:true
+
+    },
+
+
+    mobile: {
+
+        petals:5,
+
+        physicsFPS:60,
+
+        textureSize:10,
+
+        rotation:false,
+
+        interpolation:false
 
     },
 
-    mid: {
-
-        petals:7,
-
-        physicsFPS:30,
-
-        textureSize:18
-
-    },
 
     low: {
 
-        petals:4,
+        petals:3,
 
-        physicsFPS:24,
+        physicsFPS:20,
 
-        textureSize:16
+        textureSize:8,
+
+        rotation:false,
+
+        interpolation:false
 
     }
 
 };
 
 
-let profile =
-    PERFORMANCE[
-        performanceLevel
-    ];
+let profile;
 
 
 /*
-   Reduced motion means:
-   keep a tiny number of petals
-   or remove them completely.
+   Choose mobile profile.
+*/
+
+if(MOBILE_MODE){
+
+    profile =
+        PERFORMANCE.mobile;
+
+
+    /*
+       Very conservative fallback
+       for weaker hardware.
+    */
+
+    if(
+        cores <= 2 &&
+        memory <= 5
+    ){
+
+        profile =
+            PERFORMANCE.low;
+
+    }
+
+}
+else{
+
+    profile =
+        PERFORMANCE.desktop;
+
+}
+
+
+/*
+   Reduced motion.
 */
 
 if(reducedMotion){
@@ -305,9 +327,13 @@ if(reducedMotion){
 
         petals:2,
 
-        physicsFPS:18,
+        physicsFPS:15,
 
-        textureSize:14
+        textureSize:12,
+
+        rotation:false,
+
+        interpolation:false
 
     };
 
@@ -319,9 +345,11 @@ if(reducedMotion){
 ======================================================== */
 
 let canvas = null;
+
 let ctx = null;
 
 let canvasWidth = 0;
+
 let canvasHeight = 0;
 
 
@@ -358,11 +386,7 @@ function createPetalTexture(){
 
 
     /*
-       Extremely simple geometry.
-
-       No gradients.
-       No shadows.
-       No blur.
+       Extremely cheap silhouette.
     */
 
     textureCtx.beginPath();
@@ -376,7 +400,7 @@ function createPetalTexture(){
 
     textureCtx.quadraticCurveTo(
 
-        size * .86,
+        size * .84,
         size * .28,
 
         size * .70,
@@ -409,7 +433,7 @@ function createPetalTexture(){
 
     textureCtx.quadraticCurveTo(
 
-        size * .14,
+        size * .16,
         size * .28,
 
         size * .50,
@@ -446,21 +470,43 @@ const PHYSICS = {
     physicsFPS:
         profile.physicsFPS,
 
-    gravity:10,
+    gravity:
+        MOBILE_MODE
+            ? 9
+            : 11,
 
-    initialFallSpeed:16,
+    initialFallSpeed:
+        MOBILE_MODE
+            ? 15
+            : 18,
 
-    maxFallSpeed:58,
+    maxFallSpeed:
+        MOBILE_MODE
+            ? 52
+            : 62,
 
-    wind:1.1,
+    wind:
+        MOBILE_MODE
+            ? .8
+            : 1.4,
 
-    drift:2.5,
+    drift:
+        MOBILE_MODE
+            ? 1.8
+            : 3.5,
 
-    airResistance:.996,
+    airResistance:
+        .997,
 
-    deflection:16,
+    deflection:
+        MOBILE_MODE
+            ? 13
+            : 19,
 
-    bounce:.06
+    bounce:
+        MOBILE_MODE
+            ? .04
+            : .08
 
 };
 
@@ -562,10 +608,10 @@ function resizeCanvas(){
 
 
     /*
-       1× rendering is intentional.
+       1× rendering.
 
-       This is one of the biggest
-       mobile GPU savings.
+       Never render a full retina-sized
+       particle canvas on mobile.
     */
 
     canvas.width =
@@ -675,21 +721,21 @@ function createPetal(){
 
         vx:
             random(
-                -1.4,
-                1.4
+                -1.2,
+                1.2
             ),
 
         vy:
             random(
-                10,
+                9,
                 PHYSICS.initialFallSpeed
             ),
 
         width:
-            14 * size,
+            13 * size,
 
         height:
-            18 * size,
+            17 * size,
 
         rotation:
             random(
@@ -702,14 +748,14 @@ function createPetal(){
 
         spin:
             random(
-                -.65,
-                .65
+                -.55,
+                .55
             ),
 
         opacity:
             random(
                 .48,
-                .66
+                .65
             ),
 
         age:
@@ -810,8 +856,7 @@ function checkCollision(
 
 
         /*
-           Did the petal cross
-           the top edge?
+           Top-edge crossing.
         */
 
         if(
@@ -857,43 +902,17 @@ function checkCollision(
                 : 1;
 
 
-        const halfWidth =
-            Math.max(
-                1,
-                (
-                    surface.right -
-                    surface.left
-                ) * .5
-            );
-
-
-        const offset =
-            Math.min(
-                1,
-                Math.abs(
-                    petal.x -
-                    center
-                ) /
-                halfWidth
-            );
-
-
         /*
-           Soft sideways deflection.
+           Simple deflection.
+
+           No expensive calculations on
+           mobile.
         */
 
         petal.vx +=
             direction *
-            PHYSICS.deflection *
-            (
-                .45 +
-                offset * .25
-            );
+            PHYSICS.deflection;
 
-
-        /*
-           Tiny bounce.
-        */
 
         petal.vy =
             -Math.abs(
@@ -902,19 +921,21 @@ function checkCollision(
             );
 
 
-        /*
-           Place above surface.
-        */
-
         petal.y =
             surface.top -
             petal.height * .5 -
             1;
 
 
-        petal.spin +=
-            direction *
-            .18;
+        if(
+            profile.rotation
+        ){
+
+            petal.spin +=
+                direction *
+                .15;
+
+        }
 
 
         petal.cooldown =
@@ -947,8 +968,15 @@ function updatePetal(
     petal.previousY =
         petal.y;
 
-    petal.previousRotation =
-        petal.rotation;
+
+    if(
+        profile.rotation
+    ){
+
+        petal.previousRotation =
+            petal.rotation;
+
+    }
 
 
     petal.age +=
@@ -984,19 +1012,6 @@ function updatePetal(
 
 
     /*
-       Natural drift.
-    */
-
-    petal.vx +=
-        Math.sin(
-            petal.age * .8
-        ) *
-        PHYSICS.drift *
-        delta *
-        .02;
-
-
-    /*
        Gravity.
     */
 
@@ -1006,7 +1021,7 @@ function updatePetal(
 
 
     /*
-       Damping.
+       Horizontal damping.
     */
 
     petal.vx *=
@@ -1037,9 +1052,20 @@ function updatePetal(
         delta;
 
 
-    petal.rotation +=
-        petal.spin *
-        delta;
+    /*
+       Rotation is completely skipped
+       on mobile.
+    */
+
+    if(
+        profile.rotation
+    ){
+
+        petal.rotation +=
+            petal.spin *
+            delta;
+
+    }
 
 
     /*
@@ -1059,7 +1085,7 @@ function updatePetal(
 
 
     /*
-       Horizontal wrapping.
+       Horizontal wrap.
     */
 
     if(
@@ -1145,34 +1171,32 @@ function respawnPetal(
 
     petal.vx =
         random(
-            -1.4,
-            1.4
+            -1.2,
+            1.2
         );
 
 
     petal.vy =
         random(
-            10,
+            9,
             PHYSICS.initialFallSpeed
         );
 
 
-    petal.rotation =
-        random(
-            0,
-            Math.PI * 2
-        );
+    if(
+        profile.rotation
+    ){
 
+        petal.rotation =
+            random(
+                0,
+                Math.PI * 2
+            );
 
-    petal.previousRotation =
-        petal.rotation;
+        petal.previousRotation =
+            petal.rotation;
 
-
-    petal.spin =
-        random(
-            -.65,
-            .65
-        );
+    }
 
 
     petal.age =
@@ -1201,71 +1225,130 @@ function drawPetal(
     interpolation
 ){
 
-    const x =
-        petal.previousX +
-        (
-            petal.x -
-            petal.previousX
-        ) *
-        interpolation;
+    let x;
+    let y;
 
 
-    const y =
-        petal.previousY +
-        (
-            petal.y -
-            petal.previousY
-        ) *
-        interpolation;
+    /*
+       Mobile:
+       use direct physics position.
+
+       Desktop:
+       use interpolation.
+    */
+
+    if(
+        profile.interpolation
+    ){
+
+        x =
+            petal.previousX +
+            (
+                petal.x -
+                petal.previousX
+            ) *
+            interpolation;
 
 
-    const rotation =
-        petal.previousRotation +
-        (
-            petal.rotation -
-            petal.previousRotation
-        ) *
-        interpolation;
+        y =
+            petal.previousY +
+            (
+                petal.y -
+                petal.previousY
+            ) *
+            interpolation;
+
+    }
+    else{
+
+        x =
+            petal.x;
+
+        y =
+            petal.y;
+
+    }
 
 
     ctx.globalAlpha =
         petal.opacity;
 
 
-    ctx.save();
-
-
-    ctx.translate(
-        x,
-        y
-    );
-
-
-    ctx.rotate(
-        rotation
-    );
-
-
     /*
-       Cached texture.
+       Mobile gets ZERO rotation.
+
+       This allows the browser to do
+       extremely cheap bitmap drawing.
     */
 
-    ctx.drawImage(
+    if(
+        profile.rotation
+    ){
 
-        petalTexture,
-
-        -petal.width * .5,
-
-        -petal.height * .5,
-
-        petal.width,
-
-        petal.height
-
-    );
+        const rotation =
+            petal.previousRotation +
+            (
+                petal.rotation -
+                petal.previousRotation
+            ) *
+            interpolation;
 
 
-    ctx.restore();
+        ctx.save();
+
+
+        ctx.translate(
+            x,
+            y
+        );
+
+
+        ctx.rotate(
+            rotation
+        );
+
+
+        ctx.drawImage(
+
+            petalTexture,
+
+            -petal.width * .5,
+
+            -petal.height * .5,
+
+            petal.width,
+
+            petal.height
+
+        );
+
+
+        ctx.restore();
+
+    }
+    else{
+
+        /*
+           Fastest possible path.
+        */
+
+        ctx.drawImage(
+
+            petalTexture,
+
+            x -
+                petal.width * .5,
+
+            y -
+                petal.height * .5,
+
+            petal.width,
+
+            petal.height
+
+        );
+
+    }
 
 }
 
@@ -1294,10 +1377,6 @@ function drawPetals(
         canvasWidth,
         canvasHeight
     );
-
-
-    ctx.globalAlpha =
-        1;
 
 
     for(
@@ -1347,10 +1426,8 @@ function petalLoop(
 
 
     /*
-       Fixed physics.
-
-       Rendering continues at the
-       device's native refresh rate.
+       Physics runs at the device's
+       selected performance rate.
     */
 
     while(
@@ -1402,10 +1479,10 @@ function petalLoop(
 function createSparkles(){
 
     /*
-       Disabled intentionally.
+       Completely disabled.
 
-       Petals are the only atmospheric
-       particle effect for now.
+       The petal system is our only
+       particle effect.
     */
 
     if(!sparkleLayer) return;
@@ -1618,14 +1695,15 @@ window.addEventListener(
 
         initializePetals();
 
-        createSparkles();
-
 
         lastTime =
             performance.now();
 
         accumulator =
             0;
+
+
+        createSparkles();
 
 
         requestAnimationFrame(
