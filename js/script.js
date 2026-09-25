@@ -299,8 +299,8 @@ if(MOBILE_MODE){
     */
 
     if(
-        cores <= 2 &&
-        memory <= 5
+        cores <= 4 &&
+        memory <= 6
     ){
 
         profile =
