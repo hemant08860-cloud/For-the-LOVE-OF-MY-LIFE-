@@ -1,21 +1,16 @@
 /* ========================================================
    PROJECT AYE AYE MADAM 🫡
-   Version 0.6.1
-   NATURAL PETAL PHYSICS
+   Version 0.6.2
+   OPTIMIZED PETAL PHYSICS
 ======================================================== */
 
 
 /* ========================================================
-   UNLOCK DATE
+   COUNTDOWN
 ======================================================== */
 
 const unlockDate =
     new Date("January 16, 2027 00:00:00").getTime();
-
-
-/* ========================================================
-   COUNTDOWN ELEMENTS
-======================================================== */
 
 const dayBox =
     document.getElementById("days");
@@ -30,10 +25,6 @@ const secondBox =
     document.getElementById("seconds");
 
 
-/* ========================================================
-   COUNTDOWN ANIMATION
-======================================================== */
-
 function animateNumber(element){
 
     if(!element) return;
@@ -43,54 +34,18 @@ function animateNumber(element){
         [
             {
                 opacity:.45,
-                transform:
-                    "translateY(-4px) scale(.96)"
+                transform:"translateY(-3px) scale(.97)"
             },
 
             {
                 opacity:1,
-                transform:
-                    "translateY(0) scale(1)"
+                transform:"translateY(0) scale(1)"
             }
 
         ],
 
         {
-            duration:320,
-            easing:"cubic-bezier(.2,.8,.2,1)"
-        }
-
-    );
-
-}
-
-
-function pulseSeconds(){
-
-    const box =
-        secondBox?.closest(".time-box");
-
-    if(!box) return;
-
-    box.animate(
-
-        [
-            {
-                transform:"scale(1)"
-            },
-
-            {
-                transform:"scale(1.018)"
-            },
-
-            {
-                transform:"scale(1)"
-            }
-
-        ],
-
-        {
-            duration:420,
+            duration:260,
             easing:"ease-out"
         }
 
@@ -99,17 +54,10 @@ function pulseSeconds(){
 }
 
 
-/* ========================================================
-   COUNTDOWN
-======================================================== */
-
 function updateCountdown(){
 
-    const now =
-        Date.now();
-
     const distance =
-        unlockDate - now;
+        unlockDate - Date.now();
 
 
     if(distance <= 0){
@@ -125,8 +73,7 @@ function updateCountdown(){
 
     const days =
         Math.floor(
-            distance /
-            86400000
+            distance / 86400000
         );
 
 
@@ -194,9 +141,6 @@ function updateCountdown(){
         }
     );
 
-
-    pulseSeconds();
-
 }
 
 
@@ -219,7 +163,6 @@ const petalLayer =
         "petal-layer"
     );
 
-
 const sparkleLayer =
     document.getElementById(
         "sparkle-layer"
@@ -227,45 +170,68 @@ const sparkleLayer =
 
 
 /* ========================================================
-   PHYSICS SETTINGS
+   OPTIMIZED PHYSICS SETTINGS
 ======================================================== */
 
 const PHYSICS = {
 
-    gravity:18,
+    /*
+       Fewer petals = smoother mobile performance.
+    */
 
-    windStrength:4.5,
+    petalCount:10,
 
-    airResistance:.987,
+    gravity:13,
 
-    fallingSpeed:26,
+    fallSpeed:22,
 
-    maxFallSpeed:92,
+    maxFallSpeed:72,
 
-    sidewaysDrift:11,
+    wind:2.2,
 
-    topDeflection:25,
+    drift:7,
 
-    bounce:.10,
+    airResistance:.992,
 
-    slide:.88,
+    /*
+       How strongly a surface pushes
+       the petal sideways.
+    */
 
-    collisionPadding:2,
+    deflection:28,
 
-    spawnCount:14
+    /*
+       Tiny upward response.
+    */
+
+    bounce:.12,
+
+    /*
+       Prevents a petal from immediately
+       colliding with the same surface again.
+    */
+
+    collisionCooldown:.18
 
 };
 
 
 /* ========================================================
-   PETAL COLLECTION
+   PETALS
 ======================================================== */
 
 const petals = [];
 
 
 /* ========================================================
-   HELPERS
+   COLLISION SURFACES
+======================================================== */
+
+const surfaces = [];
+
+
+/* ========================================================
+   RANDOM
 ======================================================== */
 
 function random(min,max){
@@ -278,16 +244,81 @@ function random(min,max){
 }
 
 
-function clamp(
-    value,
-    min,
-    max
-){
+/* ========================================================
+   BUILD SURFACE CACHE
+======================================================== */
 
-    return Math.max(
-        min,
-        Math.min(max,value)
+function updateSurfaceCache(){
+
+    surfaces.length = 0;
+
+
+    const elements =
+        document.querySelectorAll(
+            ".envelope, .hero-note"
+        );
+
+
+    elements.forEach(
+        element=>{
+
+            const rect =
+                element.getBoundingClientRect();
+
+
+            surfaces.push({
+
+                element,
+
+                left:
+                    rect.left - 3,
+
+                right:
+                    rect.right + 3,
+
+                top:
+                    rect.top - 3,
+
+                bottom:
+                    rect.bottom + 3
+
+            });
+
+        }
     );
+
+}
+
+
+/* ========================================================
+   CREATE PETAL ELEMENT
+======================================================== */
+
+function createPetalElement(){
+
+    const element =
+        document.createElement("div");
+
+
+    element.className =
+        "petal";
+
+
+    /*
+       JavaScript controls the complete
+       position of the petal.
+    */
+
+    element.style.top = "0";
+    element.style.left = "0";
+
+
+    petalLayer.appendChild(
+        element
+    );
+
+
+    return element;
 
 }
 
@@ -296,53 +327,15 @@ function clamp(
    CREATE PETAL
 ======================================================== */
 
-function createPetalElement(){
-
-    const element =
-        document.createElement("div");
-
-    element.className =
-        "petal";
-
-    /*
-       IMPORTANT:
-       JS owns the position now.
-       This prevents CSS top/left from
-       fighting the physics engine.
-    */
-
-    element.style.top =
-        "0";
-
-    element.style.left =
-        "0";
-
-    petalLayer.appendChild(
-        element
-    );
-
-    return element;
-
-}
-
-
-/* ========================================================
-   CREATE PETAL OBJECT
-======================================================== */
-
 function createPetal(){
 
-    const width =
-        random(11,18);
-
-    const height =
-        random(15,25);
+    const element =
+        createPetalElement();
 
 
     const petal = {
 
-        element:
-            createPetalElement(),
+        element,
 
         x:
             random(
@@ -353,54 +346,55 @@ function createPetal(){
         y:
             random(
                 -window.innerHeight,
-                -30
+                -20
             ),
 
         vx:
-            random(-3,3),
+            random(-2.5,2.5),
 
         vy:
             random(
-                15,
-                PHYSICS.fallingSpeed
+                14,
+                PHYSICS.fallSpeed
             ),
 
-        width,
+        width:
+            random(10,16),
 
-        height,
+        height:
+            random(14,22),
 
         rotation:
             random(0,360),
 
         spin:
-            random(-30,30),
+            random(-22,22),
 
         opacity:
-            random(.48,.72),
+            random(.48,.70),
 
         age:
-            random(0,10),
+            random(0,8),
 
-        hitCooldown:0,
+        cooldown:0,
 
-        driftSeed:
-            random(
-                0,
-                Math.PI * 2
-            ),
+        /*
+           Prevents the same surface from
+           immediately catching the petal again.
+        */
 
-        lastCollision:null
+        lastSurface:null
 
     };
 
 
-    petal.element.style.width =
-        width + "px";
+    element.style.width =
+        petal.width + "px";
 
-    petal.element.style.height =
-        height + "px";
+    element.style.height =
+        petal.height + "px";
 
-    petal.element.style.opacity =
+    element.style.opacity =
         petal.opacity;
 
 
@@ -417,7 +411,7 @@ function createPetal(){
 
 
 /* ========================================================
-   RENDER PETAL
+   RENDER
 ======================================================== */
 
 function renderPetal(petal){
@@ -435,14 +429,14 @@ function renderPetal(petal){
 
 
 /* ========================================================
-   INITIALIZE PETALS
+   INITIALIZE
 ======================================================== */
 
 function initializePetals(){
 
     for(
         let i = 0;
-        i < PHYSICS.spawnCount;
+        i < PHYSICS.petalCount;
         i++
     ){
 
@@ -454,316 +448,114 @@ function initializePetals(){
 
 
 /* ========================================================
-   GET SOLID SURFACES
+   COLLISION
 ======================================================== */
 
-function getSurfaces(){
+function checkCollision(
+    petal,
+    previousX,
+    previousY
+){
 
-    return [
+    /*
+       Only petals travelling downward
+       can hit the top of our surfaces.
+    */
 
-        ...document.querySelectorAll(
-            ".envelope"
-        ),
+    if(
+        petal.vy <= 0
+    ){
 
-        ...document.querySelectorAll(
-            ".hero-note"
-        )
+        return;
 
-    ];
-
-}
-
-
-/* ========================================================
-   RECTANGLE
-======================================================== */
-
-function getRect(element){
-
-    const rect =
-        element.getBoundingClientRect();
+    }
 
 
-    return {
+    /*
+       Approximate petal bottom.
+       This is dramatically cheaper than
+       creating DOM rectangles every frame.
+    */
 
-        left:rect.left,
-
-        right:rect.right,
-
-        top:rect.top,
-
-        bottom:rect.bottom
-
-    };
-
-}
-
-
-/* ========================================================
-   PETAL RECTANGLE
-======================================================== */
-
-function getPetalRect(petal){
-
-    const halfWidth =
-        petal.width / 2;
-
-    const halfHeight =
+    const previousBottom =
+        previousY +
         petal.height / 2;
 
 
-    return {
-
-        left:
-            petal.x -
-            halfWidth,
-
-        right:
-            petal.x +
-            halfWidth,
-
-        top:
-            petal.y -
-            halfHeight,
-
-        bottom:
-            petal.y +
-            halfHeight
-
-    };
-
-}
-
-
-/* ========================================================
-   COLLISION TEST
-======================================================== */
-
-function isInsideHorizontalRange(
-    petalRect,
-    surface
-){
-
-    return (
-
-        petalRect.right >
-            surface.left &&
-
-        petalRect.left <
-            surface.right
-
-    );
-
-}
-
-
-/* ========================================================
-   TOP COLLISION
-======================================================== */
-
-function hitsTop(
-    previous,
-    current,
-    surface
-){
-
-    return (
-
-        previous.bottom <=
-            surface.top +
-
-            PHYSICS.collisionPadding +
-
-            2 &&
-
-        current.bottom >=
-            surface.top &&
-
-        current.bottom <=
-            surface.top + 14 &&
-
-        isInsideHorizontalRange(
-            current,
-            surface
-        )
-
-    );
-
-}
-
-
-/* ========================================================
-   SIDE COLLISION
-======================================================== */
-
-function hitsSide(
-    previous,
-    current,
-    surface
-){
-
-    const verticalOverlap =
-
-        current.bottom >
-            surface.top &&
-
-        current.top <
-            surface.bottom;
-
-
-    if(!verticalOverlap){
-
-        return null;
-
-    }
-
-
-    if(
-
-        previous.right <=
-            surface.left &&
-
-        current.right >=
-            surface.left
-
-    ){
-
-        return "left";
-
-    }
-
-
-    if(
-
-        previous.left >=
-            surface.right &&
-
-        current.left <=
-            surface.right
-
-    ){
-
-        return "right";
-
-    }
-
-
-    return null;
-
-}
-
-
-/* ========================================================
-   FIND COLLISION
-======================================================== */
-
-function findCollision(
-    petal,
-    previous,
-    current
-){
-
-    if(
-        petal.hitCooldown > 0
-    ){
-
-        return null;
-
-    }
-
-
-    const surfaces =
-        getSurfaces();
+    const currentBottom =
+        petal.y +
+        petal.height / 2;
 
 
     for(
-        const element
-        of surfaces
+        let i = 0;
+        i < surfaces.length;
+        i++
     ){
 
         const surface =
-            getRect(element);
+            surfaces[i];
 
 
         /*
-           TOP OF SURFACE
+           Skip the surface that just
+           deflected this petal.
         */
 
         if(
-            hitsTop(
-                previous,
-                current,
-                surface
-            )
+            petal.lastSurface ===
+            surface.element
         ){
 
-            return {
-
-                surface,
-
-                element,
-
-                side:"top"
-
-            };
+            continue;
 
         }
 
 
         /*
-           SIDES
+           Has the petal crossed the
+           surface's top edge?
         */
 
-        const side =
-            hitsSide(
-                previous,
-                current,
-                surface
-            );
+        const crossedTop =
+
+            previousBottom <=
+                surface.top &&
+
+            currentBottom >=
+                surface.top;
 
 
-        if(side){
+        if(!crossedTop){
 
-            return {
-
-                surface,
-
-                element,
-
-                side
-
-            };
+            continue;
 
         }
 
-    }
+
+        /*
+           Is the petal horizontally
+           above the surface?
+        */
+
+        if(
+            petal.x <
+                surface.left ||
+
+            petal.x >
+                surface.right
+
+        ){
+
+            continue;
+
+        }
 
 
-    return null;
+        /*
+           COLLISION FOUND.
+        */
 
-}
-
-
-/* ========================================================
-   DEFLECT PETAL
-======================================================== */
-
-function deflectPetal(
-    petal,
-    collision
-){
-
-    const {
-        surface,
-        side
-    } = collision;
-
-
-    /* ====================================================
-       TOP OF PAPER
-    ==================================================== */
-
-    if(side === "top"){
 
         const center =
             (
@@ -772,45 +564,29 @@ function deflectPetal(
             ) / 2;
 
 
-        const distance =
-            petal.x -
-            center;
-
-
-        /*
-           The further from the center,
-           the stronger the outward deflection.
-        */
-
-        const normalized =
-            clamp(
-                distance /
-                (
-                    (
-                        surface.right -
-                        surface.left
-                    ) / 2
-                ),
-
-                -1,
-                1
-            );
-
-
-        /*
-           If the petal hits almost exactly
-           in the middle, give it a tiny
-           random preference.
-
-           This avoids perfectly vertical
-           bouncing.
-        */
-
         let direction;
 
+
+        /*
+           Push away from the part
+           of the surface that was hit.
+        */
+
         if(
-            Math.abs(normalized) < .08
+            petal.x < center
         ){
+
+            direction = -1;
+
+        }
+        else if(
+            petal.x > center
+        ){
+
+            direction = 1;
+
+        }
+        else{
 
             direction =
                 Math.random() > .5
@@ -818,14 +594,33 @@ function deflectPetal(
                     : -1;
 
         }
-        else{
 
-            direction =
-                normalized > 0
-                    ? 1
-                    : -1;
 
-        }
+        /*
+           Distance from center gives
+           slightly stronger edge deflection.
+        */
+
+        const halfWidth =
+            (
+                surface.right -
+                surface.left
+            ) / 2;
+
+
+        const offset =
+            Math.abs(
+                petal.x - center
+            ) /
+            halfWidth;
+
+
+        const push =
+            PHYSICS.deflection *
+            (
+                .72 +
+                offset * .55
+            );
 
 
         /*
@@ -833,119 +628,60 @@ function deflectPetal(
         */
 
         petal.vx +=
+            direction * push;
 
-            direction *
 
-            (
-                PHYSICS.topDeflection *
+        /*
+           Small upward reaction.
+        */
 
-                (
-                    .65 +
-                    Math.abs(normalized) *
-                    .55
-                )
+        petal.vy =
+            -Math.abs(
+                petal.vy *
+                PHYSICS.bounce
             );
 
 
         /*
-           Very small upward response.
-        */
-
-        petal.vy *=
-            -PHYSICS.bounce;
-
-
-        /*
-           Surface sliding.
-        */
-
-        petal.vx *=
-            PHYSICS.slide;
-
-
-        /*
-           Place it directly above
+           Place petal just above
            the surface.
+
+           This is critical:
+           it prevents it from being
+           rendered INSIDE the envelope.
         */
 
         petal.y =
             surface.top -
             petal.height / 2 -
-            PHYSICS.collisionPadding;
+            1;
 
 
         /*
-           Rotate in the direction of
-           deflection.
+           Give the petal a little
+           rotational reaction.
         */
 
         petal.spin +=
             direction *
-            random(8,18);
+            random(7,16);
+
+
+        /*
+           Collision cooldown.
+        */
+
+        petal.cooldown =
+            PHYSICS.collisionCooldown;
+
+
+        petal.lastSurface =
+            surface.element;
+
+
+        return;
 
     }
-
-
-    /* ====================================================
-       LEFT SIDE
-    ==================================================== */
-
-    else if(side === "left"){
-
-        petal.x =
-            surface.left -
-            petal.width / 2 -
-            PHYSICS.collisionPadding;
-
-
-        petal.vx =
-            -Math.abs(
-                petal.vx
-            ) *
-            .25;
-
-
-        petal.vy +=
-            random(4,10);
-
-    }
-
-
-    /* ====================================================
-       RIGHT SIDE
-    ==================================================== */
-
-    else if(side === "right"){
-
-        petal.x =
-            surface.right +
-            petal.width / 2 +
-            PHYSICS.collisionPadding;
-
-
-        petal.vx =
-            Math.abs(
-                petal.vx
-            ) *
-            .25;
-
-
-        petal.vy +=
-            random(4,10);
-
-    }
-
-
-    /*
-       Prevent immediate re-collision.
-    */
-
-    petal.hitCooldown =
-        .16;
-
-
-    petal.lastCollision =
-        collision.element;
 
 }
 
@@ -964,35 +700,56 @@ function updatePetal(
 
 
     if(
-        petal.hitCooldown > 0
+        petal.cooldown > 0
     ){
 
-        petal.hitCooldown -=
+        petal.cooldown -=
             delta;
+
+    }
+    else{
+
+        petal.lastSurface =
+            null;
 
     }
 
 
     /*
-       NATURAL WIND
+       Gentle wind.
     */
 
-    const wind =
-        Math.sin(
-            petal.age * .65 +
-            petal.driftSeed
-        ) *
-        PHYSICS.windStrength;
-
-
     petal.vx +=
-        wind *
-        delta *
-        .08;
+
+        Math.sin(
+            petal.age *
+            .65
+        ) *
+
+        PHYSICS.wind *
+
+        delta;
 
 
     /*
-       GRAVITY
+       Natural sideways drift.
+    */
+
+    petal.vx +=
+
+        Math.sin(
+            petal.age *
+            .9
+        ) *
+
+        PHYSICS.drift *
+
+        delta *
+        .025;
+
+
+    /*
+       Gravity.
     */
 
     petal.vy +=
@@ -1001,25 +758,7 @@ function updatePetal(
 
 
     /*
-       Gentle lateral drift
-    */
-
-    petal.vx +=
-
-        Math.sin(
-            petal.age * .9 +
-            petal.driftSeed
-        ) *
-
-        PHYSICS.sidewaysDrift *
-
-        delta *
-
-        .035;
-
-
-    /*
-       AIR RESISTANCE
+       Air resistance.
     */
 
     petal.vx *=
@@ -1030,31 +769,30 @@ function updatePetal(
 
 
     petal.vy =
-        clamp(
+        Math.min(
             petal.vy,
-            -20,
             PHYSICS.maxFallSpeed
         );
 
 
     /*
-       PREVIOUS POSITION
+       Save previous position.
     */
 
-    const previous =
-        getPetalRect(
-            petal
-        );
+    const previousX =
+        petal.x;
+
+    const previousY =
+        petal.y;
 
 
     /*
-       MOVE
+       Move.
     */
 
     petal.x +=
         petal.vx *
         delta;
-
 
     petal.y +=
         petal.vy *
@@ -1062,7 +800,7 @@ function updatePetal(
 
 
     /*
-       ROTATION
+       Rotate.
     */
 
     petal.rotation +=
@@ -1071,47 +809,28 @@ function updatePetal(
 
 
     /*
-       CURRENT POSITION
+       Collision.
     */
 
-    const current =
-        getPetalRect(
-            petal
-        );
+    if(
+        petal.cooldown <= 0
+    ){
 
-
-    /*
-       COLLISION
-    */
-
-    const collision =
-        findCollision(
+        checkCollision(
             petal,
-            previous,
-            current
-        );
-
-
-    if(collision){
-
-        deflectPetal(
-            petal,
-            collision
+            previousX,
+            previousY
         );
 
     }
 
 
     /*
-       SCREEN WRAP HORIZONTALLY
-
-       This prevents petals from getting
-       permanently lost off the side.
+       Horizontal wrap.
     */
 
     if(
-        petal.x <
-        -60
+        petal.x < -40
     ){
 
         petal.x =
@@ -1122,18 +841,30 @@ function updatePetal(
 
     if(
         petal.x >
-        window.innerWidth + 60
+        window.innerWidth + 40
     ){
 
-        petal.x =
-            -30;
+        petal.x = -30;
 
     }
 
 
     /*
-       RENDER
+       Recycle after leaving
+       bottom of screen.
     */
+
+    if(
+        petal.y >
+        window.innerHeight + 50
+    ){
+
+        respawnPetal(
+            petal
+        );
+
+    }
+
 
     renderPetal(
         petal
@@ -1159,19 +890,19 @@ function respawnPetal(
 
     petal.y =
         random(
-            -90,
-            -25
+            -80,
+            -20
         );
 
 
     petal.vx =
-        random(-3,3);
+        random(-2.5,2.5);
 
 
     petal.vy =
         random(
-            15,
-            PHYSICS.fallingSpeed
+            14,
+            PHYSICS.fallSpeed
         );
 
 
@@ -1180,24 +911,19 @@ function respawnPetal(
 
 
     petal.spin =
-        random(-30,30);
+        random(-22,22);
 
 
     petal.age =
         random(0,5);
 
 
-    petal.hitCooldown =
+    petal.cooldown =
         0;
 
 
-    petal.lastCollision =
+    petal.lastSurface =
         null;
-
-
-    renderPetal(
-        petal
-    );
 
 }
 
@@ -1206,7 +932,7 @@ function respawnPetal(
    PHYSICS LOOP
 ======================================================== */
 
-let lastFrame =
+let lastTime =
     performance.now();
 
 
@@ -1218,38 +944,37 @@ function physicsLoop(
         Math.min(
             (
                 currentTime -
-                lastFrame
+                lastTime
             ) / 1000,
 
-            .035
+            .033
         );
 
 
-    lastFrame =
+    lastTime =
         currentTime;
 
 
+    /*
+       Cache ALL collision rectangles
+       only once per frame.
+
+       This is the major performance fix.
+    */
+
+    updateSurfaceCache();
+
+
     for(
-        const petal
-        of petals
+        let i = 0;
+        i < petals.length;
+        i++
     ){
 
         updatePetal(
-            petal,
+            petals[i],
             delta
         );
-
-
-        if(
-            petal.y >
-            window.innerHeight + 80
-        ){
-
-            respawnPetal(
-                petal
-            );
-
-        }
 
     }
 
@@ -1268,7 +993,7 @@ function physicsLoop(
 function createSparkles(){
 
     const count =
-        30;
+        22;
 
 
     for(
@@ -1278,7 +1003,9 @@ function createSparkles(){
     ){
 
         const sparkle =
-            document.createElement("span");
+            document.createElement(
+                "span"
+            );
 
 
         sparkle.className =
@@ -1296,18 +1023,13 @@ function createSparkles(){
 
 
         sparkle.style.setProperty(
-
             "--duration",
-
-            random(2.5,6) +
-            "s"
-
+            random(3,6) + "s"
         );
 
 
         sparkle.style.animationDelay =
-            random(0,5) +
-            "s";
+            random(0,5) + "s";
 
 
         sparkleLayer.appendChild(
@@ -1317,6 +1039,18 @@ function createSparkles(){
     }
 
 }
+
+
+/* ========================================================
+   RESIZE
+======================================================== */
+
+window.addEventListener(
+    "resize",
+    ()=>{
+        updateSurfaceCache();
+    }
+);
 
 
 /* ========================================================
@@ -1345,18 +1079,15 @@ function startLoader(){
             "loader"
         );
 
-
     const hero =
         document.getElementById(
             "hero"
         );
 
-
     const progressBar =
         document.querySelector(
             ".progress-bar"
         );
-
 
     const loadingMessage =
         document.getElementById(
@@ -1419,7 +1150,6 @@ function startLoader(){
 
 
                     setTimeout(
-
                         ()=>{
 
                             loader.style.display =
@@ -1441,7 +1171,6 @@ function startLoader(){
                         },
 
                         500
-
                     );
 
                 }
@@ -1456,7 +1185,7 @@ function startLoader(){
 
 
 /* ========================================================
-   UNLOCK WEBSITE
+   UNLOCK
 ======================================================== */
 
 function unlockWebsite(){
@@ -1485,7 +1214,6 @@ function unlockWebsite(){
 
 
     setTimeout(
-
         ()=>{
 
             screen.style.display =
@@ -1497,21 +1225,25 @@ function unlockWebsite(){
         },
 
         800
-
     );
 
 }
 
 
 /* ========================================================
-   INITIALIZATION
+   INITIALIZE
 ======================================================== */
 
 window.addEventListener(
-
     "load",
-
     ()=>{
+
+        /*
+           Build collision geometry
+           before the first frame.
+        */
+
+        updateSurfaceCache();
 
         createSparkles();
 
@@ -1522,5 +1254,4 @@ window.addEventListener(
         );
 
     }
-
 );
