@@ -3110,4 +3110,42 @@ body{
 
 }
 
+/* ========================================================
 
+   v1.1.1 — PETAL LAYER FIX
+
+   Keep the background behind the UI while allowing petals
+
+   to render above the envelopes and hero note.
+
+======================================================== */
+
+
+#atmosphere{
+
+    z-index:25;
+
+}
+
+
+#atmosphere .background{
+
+    z-index:-1;
+
+}
+
+
+#sparkle-layer{
+
+    z-index:1;
+
+}
+
+
+#petal-layer{
+
+    z-index:40;
+
+    pointer-events:none;
+
+}
