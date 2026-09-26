@@ -10,7 +10,7 @@
 ======================================================== */
 
 const unlockDate =
-    new Date("January 16, 2027 00:00:00").getTime();
+    new Date("September 25, 2026 00:00:00").getTime();
 
 const dayBox =
     document.getElementById("days");
@@ -237,7 +237,7 @@ const PERFORMANCE = {
 
         petals:9,
 
-        physicsFPS:60,
+        physicsFPS:30,
 
         textureSize:20,
 
@@ -252,9 +252,9 @@ const PERFORMANCE = {
 
         petals:5,
 
-        physicsFPS:60,
+        physicsFPS:24,
 
-        textureSize:10,
+        textureSize:14,
 
         rotation:false,
 
@@ -269,7 +269,7 @@ const PERFORMANCE = {
 
         physicsFPS:20,
 
-        textureSize:8,
+        textureSize:12,
 
         rotation:false,
 
@@ -300,7 +300,7 @@ if(MOBILE_MODE){
 
     if(
         cores <= 4 &&
-        memory <= 6
+        memory <= 3
     ){
 
         profile =
@@ -1656,13 +1656,83 @@ function unlockWebsite(){
     }
 
 
+    /*
+       Begin unlock state.
+    */
+
+    document.body.classList.add(
+        "unlocking"
+    );
+
+    screen.classList.add(
+        "unlocking"
+    );
+
+
+    /*
+       Create lightweight transition overlay.
+    */
+
+    const transition =
+        document.createElement(
+            "div"
+        );
+
+    transition.id =
+        "unlock-transition";
+
+
+    transition.innerHTML = `
+        <div class="unlock-heart">
+
+            <span class="unlock-ring"></span>
+
+            <span class="unlock-ring"></span>
+
+            ♥
+            
+        </div>
+    `;
+
+
+    document.body.appendChild(
+        transition
+    );
+
+
+    /*
+       Trigger CSS animation.
+    */
+
+    requestAnimationFrame(
+        ()=>{
+            requestAnimationFrame(
+                ()=>{
+                    transition.classList.add(
+                        "active"
+                    );
+                }
+            );
+        }
+    );
+
+
+    /*
+       Fade the countdown screen
+       underneath the transition.
+    */
+
     screen.style.transition =
-        "opacity .8s ease";
+        "opacity 1.1s ease";
 
 
     screen.style.opacity =
         "0";
 
+
+    /*
+       Move to the existing loader.
+    */
 
     setTimeout(
         ()=>{
@@ -1675,11 +1745,43 @@ function unlockWebsite(){
 
         },
 
-        800
+        1200
+    );
+
+
+    /*
+       Remove transition after
+       it has completed.
+    */
+
+    setTimeout(
+        ()=>{
+
+            transition.classList.remove(
+                "active"
+            );
+
+
+            setTimeout(
+                ()=>{
+
+                    transition.remove();
+
+                    document.body.classList.remove(
+                        "unlocking"
+                    );
+
+                },
+
+                1100
+            );
+
+        },
+
+        2100
     );
 
 }
-
 
 /* ========================================================
    INITIALIZE
