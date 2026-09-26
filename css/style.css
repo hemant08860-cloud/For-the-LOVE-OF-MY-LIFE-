@@ -3144,3 +3144,57 @@ body{
     pointer-events:none;
 
 }
+/* ========================================================
+   MOBILE ATMOSPHERE FIX
+   Keep the aurora full-screen and correctly scaled.
+======================================================== */
+
+@media (max-width:600px){
+
+    #atmosphere{
+        position:fixed !important;
+        inset:0 !important;
+        width:100vw !important;
+        height:100vh !important;
+        min-width:100vw !important;
+        min-height:100vh !important;
+        overflow:hidden !important;
+        z-index:0 !important;
+    }
+
+    #atmosphere .background{
+        position:absolute !important;
+
+        top:0 !important;
+        left:0 !important;
+        right:auto !important;
+        bottom:auto !important;
+
+        width:100vw !important;
+        height:100vh !important;
+
+        min-width:100vw !important;
+        min-height:100vh !important;
+
+        inset:auto !important;
+
+        transform:none !important;
+
+        background-size:
+            100% 100%,
+            100% 100%,
+            100% 100%,
+            100% 100%,
+            250% 250% !important;
+
+        background-position:
+            0% 0%,
+            100% 0%,
+            50% 100%,
+            70% 50%,
+            0% 50%;
+
+        animation:aurora 24s ease-in-out infinite !important;
+    }
+
+}
