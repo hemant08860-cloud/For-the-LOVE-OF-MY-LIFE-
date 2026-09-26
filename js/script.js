@@ -10,7 +10,7 @@
 ======================================================== */
 
 const unlockDate =
-    new Date("September 25, 2026 00:00:00").getTime();
+    new Date("January 16, 2027 00:00:00").getTime();
 
 const dayBox =
     document.getElementById("days");
