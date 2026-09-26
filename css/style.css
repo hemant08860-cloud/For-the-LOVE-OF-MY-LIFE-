@@ -105,24 +105,19 @@ body{
 ======================================================== */
 
 
-#atmosphere{
-
-
-    position:fixed;
-
-
-    inset:0;
-
-
-    overflow:hidden;
-
-
-    pointer-events:none;
-
-
+#atmosphere {
     z-index:0;
+}
 
+#petal-layer {
+    position:fixed;
+    inset:0;
+    z-index:40;
+    pointer-events:none;
+}
 
+#countdown-screen {
+    z-index:10;
 }
 
 
