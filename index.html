@@ -1,130 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
 
-<!-- ==================================================
-     BIRTHDAY EXPERIENCE — LETTER COLLECTION
-================================================== -->
+<head>
 
-<section id="hero" class="birthday-experience">
+    <meta charset="UTF-8">
 
-    <header class="birthday-header">
-        <span class="birthday-decoration">🌸 ✨ 🌸</span>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-        <h1>Happy Birthday, Pooja! 💗</h1>
+    <title>
+        Project AYE AYE MADAM 🫡
+    </title>
 
-        <p>
-            Three little letters, written from the heart.
-        </p>
-    </header>
 
-    <section id="letter-collection">
+    <!-- ==================================================
+         FONTS
+    =================================================== -->
 
-        <div class="letter-heading">
-            <span>💌</span>
-            <h2>Letters From Your HERO</h2>
-            <p>Some words deserve to be opened slowly.</p>
-        </div>
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
 
-        <div class="letter-grid">
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
 
-            <button class="letter-envelope"
-                    data-letter="birthday-letter">
-                <span class="envelope-icon">💌</span>
-                <strong>A Birthday Letter</strong>
-                <small>Written especially for you</small>
-                <span class="open-hint">Open letter ↗</span>
-            </button>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Caveat:wght@400;500;600&display=swap"
+        rel="stylesheet"
+    >
 
-            <button class="letter-envelope"
-                    data-letter="miss-letter">
-                <span class="envelope-icon">💗</span>
-                <strong>A Letter I Miss You</strong>
-                <small>Some feelings never leave</small>
-                <span class="open-hint">Open letter ↗</span>
-            </button>
 
-            <button class="letter-envelope"
-                    data-letter="boards-letter">
-                <span class="envelope-icon">🌷</span>
-                <strong>For Your Boards</strong>
-                <small>A little reminder to believe</small>
-                <span class="open-hint">Open letter ↗</span>
-            </button>
+    <!-- ==================================================
+         STYLESHEET
+    =================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- ==================================================
+         ATMOSPHERE
+    =================================================== -->
+
+    <div id="atmosphere">
+    <div class="background"></div>
+    <div id="sparkle-layer"></div>
+</div>
+
+<!-- petal layer MOVED OUTSIDE atmosphere -->
+<div id="petal-layer"></div>
+
+<main id="countdown-screen">
+    ...
+</main>
+
+
+
+    <!-- ==================================================
+         COUNTDOWN SCREEN
+    =================================================== -->
+
+    <main id="countdown-screen">
+
+
+        <!-- ==================================================
+             MAIN GLASS PANEL
+        =================================================== -->
+
+        <section class="glass-card">
+
+
+            <!-- ==================================================
+                 HEADING
+            =================================================== -->
+
+            <header class="countdown-header">
+
+                <h1>
+
+                    <span class="heading-flower">
+                        🌸
+                    </span>
+
+                    A Special Day Is Coming
+
+                </h1>
+
+
+                <p class="countdown-subtitle">
+
+                    Just a little more time...
+
+                </p>
+
+
+                <div class="heading-heart">
+
+                    ♡
+
+                </div>
+
+            </header>
+
+
+
+            <!-- ==================================================
+                 COUNTDOWN ENVELOPES
+            =================================================== -->
+
+            <section
+                class="countdown-container"
+                aria-label="Birthday countdown"
+            >
+
+
+                <!-- DAYS -->
+
+                <article
+                    class="time-box envelope"
+                    data-surface="days"
+                >
+
+                    <div class="envelope-flap"></div>
+
+                    <div class="envelope-fold"></div>
+
+                    <div class="wax-seal">
+
+                        <span>♥</span>
+
+                    </div>
+
+
+                    <div class="time-content">
+
+                        <span
+                            id="days"
+                            class="time-number"
+                        >
+                            000
+                        </span>
+
+                        <small>
+                            Days
+                        </small>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- HOURS -->
+
+                <article
+                    class="time-box envelope"
+                    data-surface="hours"
+                >
+
+                    <div class="envelope-flap"></div>
+
+                    <div class="envelope-fold"></div>
+
+                    <div class="wax-seal">
+
+                        <span>♥</span>
+
+                    </div>
+
+
+                    <div class="time-content">
+
+                        <span
+                            id="hours"
+                            class="time-number"
+                        >
+                            00
+                        </span>
+
+                        <small>
+                            Hours
+                        </small>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- MINUTES -->
+
+                <article
+                    class="time-box envelope"
+                    data-surface="minutes"
+                >
+
+                    <div class="envelope-flap"></div>
+
+                    <div class="envelope-fold"></div>
+
+                    <div class="wax-seal">
+
+                        <span>♥</span>
+
+                    </div>
+
+
+                    <div class="time-content">
+
+                        <span
+                            id="minutes"
+                            class="time-number"
+                        >
+                            00
+                        </span>
+
+                        <small>
+                            Minutes
+                        </small>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- SECONDS -->
+
+                <article
+                    class="time-box envelope"
+                    data-surface="seconds"
+                >
+
+                    <div class="envelope-flap"></div>
+
+                    <div class="envelope-fold"></div>
+
+                    <div class="wax-seal">
+
+                        <span>♥</span>
+
+                    </div>
+
+
+                    <div class="time-content">
+
+                        <span
+                            id="seconds"
+                            class="time-number"
+                        >
+                            00
+                        </span>
+
+                        <small>
+                            Seconds
+                        </small>
+
+                    </div>
+
+                </article>
+
+
+            </section>
+
+
+
+            <!-- ==================================================
+                 WAITING MESSAGE
+            =================================================== -->
+
+            <p id="countdown-text">
+
+                This little project is patiently waiting
+                for the right moment.
+
+            </p>
+
+
+
+            <!-- ==================================================
+                 HERO NOTE
+            =================================================== -->
+
+            <article
+                class="hero-note"
+                data-surface="hero-note"
+            >
+
+
+                <div class="note-paper-shine"></div>
+
+
+                <div class="note-title">
+
+                    <span>
+                        💌
+                    </span>
+
+                    A Message From Your HERO
+
+                </div>
+
+
+                <div class="note-content">
+
+                    <p>
+
+                        Be ready to
+
+                        <strong>
+                            LOSE THE BET!
+                        </strong>
+
+                        ❤️
+
+                    </p>
+
+
+                    <p>
+
+                        Your HERO has a surprise
+                        planned for his beloved.
+
+                        😍
+
+                    </p>
+
+                </div>
+
+
+            </article>
+
+
+
+            <!-- ==================================================
+                 UNLOCK
+            =================================================== -->
+
+            <div class="unlock-box">
+
+                <span>
+                    🔒
+                </span>
+
+                Unlocks on
+
+                <strong>
+                    16 January
+                </strong>
+
+            </div>
+
+
+
+            <!-- ==================================================
+                 FOOTER MESSAGE
+            =================================================== -->
+
+            <footer class="wait-message">
+
+                <span class="line"></span>
+
+                <span class="footer-heart">
+                    ♥
+                </span>
+
+                <span class="line"></span>
+
+
+                <p>
+                    SOME MOMENTS ARE WORTH THE WAIT
+                </p>
+
+            </footer>
+
+
+        </section>
+
+    </main>
+
+
+
+    <!-- ==================================================
+         LOADER
+    =================================================== -->
+
+    <section id="loader">
+
+        <div class="background"></div>
+
+
+        <div class="loader-card">
+
+
+            <div class="emoji">
+
+                🫡
+
+            </div>
+
+
+            <h1>
+
+                PROJECT
+
+            </h1>
+
+
+            <h2>
+
+                AYE AYE MADAM!!
+
+            </h2>
+
+
+            <p id="loadingMessage">
+
+                Initializing Mission...
+
+            </p>
+
+
+            <div class="progress">
+
+                <div class="progress-bar"></div>
+
+            </div>
+
+
+            <div class="status">
+
+                Mission ID : AAM-1601
+
+                <br>
+
+                Status : Active
+
+            </div>
+
 
         </div>
 
     </section>
 
 
-    <!-- BIRTHDAY LETTER -->
 
-    <article class="letter-paper" id="birthday-letter" hidden>
+    <!-- ==================================================
+         FUTURE BIRTHDAY EXPERIENCE
+    =================================================== -->
 
-        <button class="letter-close" aria-label="Close letter">×</button>
+    <section id="hero">
 
-        <div class="paper-decoration">💗</div>
+        <h1>
 
-        <h2>Happiest Birthday, My Sweetheart!</h2>
+            Happy Birthday 🌸
 
-        <div class="letter-body">
-            <p>Happiest Birthday MY SWEETHEART! 💗</p>
+        </h1>
 
-            <p>Waiting for ts day for so long and today it is, my love 💕! I know it's not easy for you nor it is for me to be apart but I do feel that it wasn't your choice at all. I hope aap dawaiyan lena nahi bhulti hogi, waqt par khaana khate honge and paani bhi yaad se pi lete honge.</p>
-
-            <p>Yk what? I missed you every single day. In fact I've got tears while writing ts. Everyday I would up, I thought ki aap kaise honge. Jab mandir jaata toh sabse pehle aapke liye prayers karta ki, aap khush raho humesha...🥺🤍</p>
-
-            <p>You got all the love and care. You're worthy of my love. You stay in my heart and prayers 🥹. I promise to be yours forever, Pooja ❤️.You complete me 💐... You truly do 🥹... I love you, forever 💗🥹!</p>
-
-            <p>Happy Birthday 🎂🥹</p>
-        </div>
-
-    </article>
+    </section>
 
 
-    <!-- MISS YOU LETTER -->
 
-    <article class="letter-paper" id="miss-letter" hidden>
+    <!-- ==================================================
+         JAVASCRIPT
+    =================================================== -->
 
-        <button class="letter-close" aria-label="Close letter">×</button>
-
-        <div class="paper-decoration">💝</div>
-
-        <h2>A Letter That I Miss You</h2>
-
-        <div class="letter-body">
-            <p>My love 💕💕💕,</p>
-
-            <p>I Love You 🥹🫶✨! You wanna hear a thousand times, I will say more than that, that I Love You! Everyday when I wake up, I feel like a part of me isn't with me... And that's you 💗. Most of the times, tears fall from my eyes because I miss you everyday. I miss you reminding me everyday to take care of myself, I miss your kisses and hugs, I miss your I love You texts and I miss my girl who completes me 🥹💖💝.</p>
-
-            <p>Kisses and hugs to my Cutie Pie 🥰! And a reminder that you're special, as you're ✨💝! You don't need to be a different girl, you don't need to be at your best version to get my love ✨🫶! You're always gonna be same for me Pooja 🎀! Once again, Happy Birthday my heart ❤️! You're very special to me 🥹 💖! I Love You 💗✨!</p>
-
-            <p>MWAHHHHHHHHHH 😘 😘 😘!</p>
-        </div>
-
-    </article>
+    <script src="js/script.js"></script>
 
 
-    <!-- CLASS 12 BOARD EXAM LETTER -->
+</body>
 
-    <article class="letter-paper boards-paper"
-             id="boards-letter" hidden>
-
-        <button class="letter-close" aria-label="Close letter">×</button>
-
-        <div class="paper-decoration">🌷</div>
-
-        <h2>A Little Message Before Your Boards</h2>
-
-        <div class="letter-body">
-            <p>My dear 💖,</p>
-
-            <p>As your boards datesheet is out and ofc you're exams will start in a month now, I want you to remember that your worth doesn't depends on a marksheet or anything else. You always have to remember that you're capable of doing things your way. One of the things I learnt this year is that you don't decide your future in a day. You make it better everyday by staying consistent and smiling at the worst days of your life. Don't let your smile 😊 fade bcuz of an exam. Let exam be important but don't let an exam decide your worth. A piece of paper 📜 doesn't reflect your hardwork and dedication, when you were keep working on the hardest days of your life. Best of Luck 🤞 for your exams and I'll be waiting for you after your boards ends ✨💗!</p>
-
-            <p>Love you my sweetheart 🫶😘, and happy birthday 🎈 🎂!</p>
-        </div>
-
-        <div class="boards-footer">
-            Believe in yourself. 🌸
-        </div>
-
-    </article>
-
-</section>
+</html>
