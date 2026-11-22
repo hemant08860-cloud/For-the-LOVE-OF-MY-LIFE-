@@ -3717,3 +3717,264 @@ body.unlocking #atmosphere .background{
     }
 
 }
+
+
+/* ========================================================
+   LETTER EXPERIENCE v1.0 — ADDITIVE STYLES
+   Existing waiting screen styles are preserved.
+======================================================== */
+
+#hero.birthday-experience {
+    position: relative;
+    z-index: 50;
+    display: none;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    width: 100%;
+    min-height: 100vh;
+    padding: clamp(28px, 6vw, 64px) 18px 60px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    text-align: center;
+    background:
+        radial-gradient(circle at 12% 8%, rgba(255,205,226,.34), transparent 34%),
+        radial-gradient(circle at 90% 28%, rgba(220,207,255,.30), transparent 35%),
+        linear-gradient(145deg, rgba(255,249,252,.96), rgba(255,239,247,.94) 55%, rgba(246,241,255,.96));
+    -webkit-overflow-scrolling: touch;
+}
+
+#hero.birthday-experience > * {
+    width: min(100%, 920px);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.birthday-header { padding: 12px 8px 34px; }
+
+.birthday-decoration {
+    display: inline-block;
+    margin-bottom: 12px;
+    color: #D66F9A;
+    font-size: 1.2rem;
+    letter-spacing: 8px;
+}
+
+#hero.birthday-experience .birthday-header h1 {
+    color: #C94F83;
+    font-family: "Caveat", cursive;
+    font-size: clamp(2.7rem, 8vw, 4.5rem);
+    font-weight: 600;
+    line-height: 1.08;
+}
+
+.birthday-header p {
+    margin-top: 12px;
+    color: #786B7A;
+    font-size: clamp(.88rem, 2.5vw, 1rem);
+    line-height: 1.7;
+}
+
+.letter-heading { margin: 0 auto 22px; }
+.letter-heading > span { display: inline-block; margin-bottom: 7px; font-size: 1.8rem; }
+.letter-heading h2 { color: #654B62; font-size: clamp(1.1rem, 4vw, 1.45rem); font-weight: 600; }
+.letter-heading p { margin-top: 7px; color: #8B7B89; font-family: "Caveat", cursive; font-size: 1.35rem; }
+
+.letter-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 17px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.letter-envelope {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    min-height: 205px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 22px 15px 18px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.95);
+    border-radius: 22px;
+    background: linear-gradient(145deg, rgba(255,255,255,.96), rgba(255,232,242,.94));
+    box-shadow: 0 17px 38px rgba(137,84,116,.10), 0 4px 12px rgba(230,132,174,.08), inset 0 1px 0 #fff;
+    color: #5E4D5D;
+    font: inherit;
+    text-align: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+}
+
+.letter-envelope::before {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border: 1px solid rgba(225,165,190,.28);
+    border-radius: 16px;
+    pointer-events: none;
+}
+
+.letter-envelope::after {
+    content: "♥";
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    color: rgba(218,105,151,.38);
+    font-size: .8rem;
+}
+
+.letter-envelope:hover {
+    transform: translateY(-5px);
+    border-color: rgba(231,158,190,.75);
+    box-shadow: 0 23px 44px rgba(137,84,116,.14), 0 7px 16px rgba(230,132,174,.10);
+}
+
+.letter-envelope:active { transform: translateY(-1px) scale(.985); }
+
+.letter-envelope:focus-visible,
+.letter-close:focus-visible {
+    outline: 3px solid rgba(213,103,151,.55);
+    outline-offset: 4px;
+}
+
+.envelope-icon {
+    display: grid;
+    width: 58px;
+    height: 58px;
+    place-items: center;
+    border: 1px solid rgba(255,255,255,.95);
+    border-radius: 18px;
+    background: linear-gradient(145deg, #FFF7FA, #FFE4EF);
+    box-shadow: 0 7px 17px rgba(201,91,139,.12), inset 0 1px 0 #fff;
+    font-size: 1.75rem;
+}
+
+.letter-envelope strong { color: #B94F7B; font-size: .92rem; font-weight: 600; line-height: 1.4; }
+.letter-envelope small { color: #847582; font-size: .72rem; line-height: 1.5; }
+.open-hint { margin-top: 4px; color: #C45D89; font-size: .7rem; font-weight: 600; letter-spacing: .3px; }
+
+.letter-paper[hidden] { display: none !important; }
+
+.letter-paper {
+    position: relative;
+    width: min(100%, 760px) !important;
+    margin: 32px auto 0 !important;
+    padding: clamp(27px, 5vw, 54px) clamp(20px, 6vw, 62px);
+    border: 1px solid rgba(224,205,184,.85);
+    border-radius: 8px 8px 15px 15px;
+    background:
+        linear-gradient(90deg, rgba(180,145,118,.045), transparent 8%, transparent 92%, rgba(180,145,118,.035)),
+        repeating-linear-gradient(to bottom, rgba(255,253,246,.98) 0, rgba(255,253,246,.98) 31px, rgba(224,211,194,.20) 32px);
+    box-shadow: 0 24px 65px rgba(91,69,79,.13), 0 5px 15px rgba(91,69,79,.06), inset 0 1px 0 rgba(255,255,255,.95);
+    color: #4D4650;
+    text-align: left;
+    transform-origin: top center;
+    animation: letterPaperReveal .55s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.letter-paper::before {
+    content: "";
+    position: absolute;
+    inset: 9px;
+    border: 1px solid rgba(210,174,184,.30);
+    border-radius: 4px 4px 11px 11px;
+    pointer-events: none;
+}
+
+@keyframes letterPaperReveal {
+    from { opacity: 0; transform: translateY(14px) scale(.985); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.letter-close {
+    position: absolute;
+    top: 14px;
+    right: 15px;
+    z-index: 2;
+    display: grid;
+    width: 36px;
+    height: 36px;
+    place-items: center;
+    border: 1px solid rgba(199,143,164,.25);
+    border-radius: 50%;
+    background: rgba(255,255,255,.78);
+    color: #A65B7B;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background .2s ease, transform .2s ease;
+}
+
+.letter-close:hover { transform: rotate(8deg); background: #FFF0F6; }
+.paper-decoration { margin: 0 0 9px; color: #D4779D; font-size: 1.35rem; text-align: center; }
+
+.letter-paper h2 {
+    position: relative;
+    margin: 0 25px 24px;
+    color: #B94F7B;
+    font-family: "Caveat", cursive;
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.letter-body {
+    position: relative;
+    z-index: 1;
+    color: #514A54;
+    font-size: clamp(.91rem, 2.2vw, 1rem);
+    line-height: 2;
+    overflow-wrap: anywhere;
+}
+
+.letter-body p + p { margin-top: 17px; }
+
+.boards-paper {
+    background:
+        linear-gradient(90deg, rgba(180,145,118,.035), transparent 8%, transparent 92%, rgba(180,145,118,.03)),
+        repeating-linear-gradient(to bottom, rgba(255,254,248,.99) 0, rgba(255,254,248,.99) 31px, rgba(216,207,190,.18) 32px);
+}
+
+.boards-paper h2 { color: #9C6482; }
+.boards-footer { position: relative; margin-top: 25px; color: #B45F87; font-family: "Caveat", cursive; font-size: 1.55rem; text-align: right; }
+
+@media (max-width: 700px) {
+    .letter-grid { grid-template-columns: 1fr; gap: 13px; max-width: 480px; }
+    .letter-envelope {
+        min-height: 132px;
+        display: grid;
+        grid-template-columns: 58px 1fr;
+        grid-template-rows: auto auto;
+        justify-items: start;
+        column-gap: 14px;
+        row-gap: 3px;
+        padding: 17px 20px;
+        text-align: left;
+    }
+    .envelope-icon { grid-column: 1; grid-row: 1 / 3; }
+    .letter-envelope strong, .letter-envelope small, .open-hint { grid-column: 2; }
+    .letter-envelope strong { align-self: end; }
+    .letter-envelope small { align-self: start; }
+    .open-hint { display: none; }
+    .letter-paper { margin-top: 24px !important; padding: 38px 22px 32px; }
+    .letter-paper h2 { margin-left: 8px; margin-right: 8px; }
+}
+
+@media (max-width: 380px) {
+    #hero.birthday-experience { padding-left: 13px; padding-right: 13px; }
+    .letter-envelope { min-height: 120px; padding: 14px; }
+    .letter-paper { padding: 35px 17px 27px; }
+    .letter-body { font-size: .88rem; line-height: 1.9; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .letter-envelope, .letter-close { transition: none !important; }
+    .letter-paper { animation: none !important; }
+}
