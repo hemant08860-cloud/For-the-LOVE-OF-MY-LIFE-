@@ -770,7 +770,131 @@ function createPetal(){
 
     });
 
+}/* ========================================================
+   LETTER EXPERIENCE — v1.0
+   Envelope open / close interactions
+======================================================== */
+
+function initializeLetterExperience() {
+
+    const collection =
+        document.getElementById("letter-collection");
+
+    const envelopes =
+        document.querySelectorAll(".letter-envelope[data-letter]");
+
+    const letters =
+        document.querySelectorAll(".letter-paper[id]");
+
+    if (!collection || envelopes.length === 0 || letters.length === 0) {
+        return;
+    }
+
+    let activeLetter = null;
+    let activeEnvelope = null;
+
+    function closeActiveLetter(restoreFocus = true) {
+
+        if (!activeLetter) return;
+
+        activeLetter.hidden = true;
+
+        if (activeEnvelope) {
+            activeEnvelope.setAttribute("aria-expanded", "false");
+
+            if (restoreFocus) {
+                activeEnvelope.focus();
+            }
+        }
+
+        activeLetter = null;
+        activeEnvelope = null;
+
+        collection.hidden = false;
+        collection.scrollIntoView({
+            behavior: reducedMotion ? "auto" : "smooth",
+            block: "start"
+        });
+    }
+
+    envelopes.forEach((envelope) => {
+
+        envelope.setAttribute("aria-expanded", "false");
+
+        envelope.addEventListener("click", () => {
+
+            const letterId =
+                envelope.getAttribute("data-letter");
+
+            const letter =
+                document.getElementById(letterId);
+
+            if (!letter || !letter.classList.contains("letter-paper")) {
+                return;
+            }
+
+            // Close any previously opened letter without moving focus.
+            if (activeLetter && activeLetter !== letter) {
+                activeLetter.hidden = true;
+
+                if (activeEnvelope) {
+                    activeEnvelope.setAttribute("aria-expanded", "false");
+                }
+            }
+
+            collection.hidden = true;
+
+            letter.hidden = false;
+
+            activeLetter = letter;
+            activeEnvelope = envelope;
+
+            envelope.setAttribute("aria-expanded", "true");
+
+            letter.scrollIntoView({
+                behavior: reducedMotion ? "auto" : "smooth",
+                block: "start"
+            });
+
+            const closeButton =
+                letter.querySelector(".letter-close");
+
+            if (closeButton) {
+                closeButton.focus({ preventScroll: true });
+            }
+
+        });
+
+    });
+
+    letters.forEach((letter) => {
+
+        const closeButton =
+            letter.querySelector(".letter-close");
+
+        if (!closeButton) return;
+
+        closeButton.addEventListener("click", () => {
+            closeActiveLetter(true);
+        });
+
+    });
+
+    // Escape closes the currently open letter.
+    document.addEventListener("keydown", (event) => {
+
+        if (event.key === "Escape" && activeLetter && !activeLetter.hidden) {
+            closeActiveLetter(true);
+        }
+
+    });
+
 }
+
+
+/* ========================================================
+   INITIALIZE
+======================================================== */
 
 
 /* ========================================================
@@ -1169,8 +1293,7 @@ function respawnPetal(
         y;
 
 
-    petal.vx =
-        random(
+    petal.vx =        random(
             -1.2,
             1.2
         );
@@ -1690,7 +1813,7 @@ function unlockWebsite(){
             <span class="unlock-ring"></span>
 
             ♥
-            
+
         </div>
     `;
 
@@ -1806,6 +1929,8 @@ window.addEventListener(
 
 
         createSparkles();
+
+        initializeLetterExperience();
 
 
         requestAnimationFrame(
