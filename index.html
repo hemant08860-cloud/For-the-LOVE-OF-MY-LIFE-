@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>PROJECT AYE AYE MADAM 🫡 — The Enchanted Keepsake</title>
+
+    <!-- Typography: Cormorant Garamond, Parisienne & Lora -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Parisienne&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Single Consolidated Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- ==================================================
+         SHARED ATMOSPHERE & CANVAS PETAL ENGINE
+    =================================================== -->
+    <div id="atmosphere" aria-hidden="true">
+        <div class="background"></div>
+        <div class="paper-grain"></div>
+        <div id="sparkle-layer">
+            <span class="bokeh-orb bokeh-1"></span>
+            <span class="bokeh-orb bokeh-2"></span>
+            <span class="bokeh-orb bokeh-3"></span>
+            <span class="bokeh-orb bokeh-4"></span>
+            <span class="dust-mote mote-1"></span>
+            <span class="dust-mote mote-2"></span>
+            <span class="dust-mote mote-3"></span>
+            <span class="dust-mote mote-4"></span>
+            <span class="dust-mote mote-5"></span>
+            <span class="dust-mote mote-6"></span>
+        </div>
+    </div>
+
+    <div id="petal-layer" aria-hidden="true"></div>
+
+    <!-- Optional Soft Sound Toggle (Muted by Default — Never Autoplays) -->
+    <button
+        type="button"
+        id="sound-toggle"
+        class="sound-toggle"
+        aria-pressed="false"
+        aria-label="Enable gentle chime and paper sound effects"
+        title="Optional soft interaction sounds"
+    >
+        <svg class="sound-icon sound-icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="22" y1="9" x2="16" y2="15"></line>
+            <line x1="16" y1="9" x2="22" y2="15"></line>
+        </svg>
+        <svg class="sound-icon sound-icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+        </svg>
+        <span class="sound-label">Sound</span>
+    </button>
+
+    <!-- ==================================================
+         SCENE 1 — COUNTDOWN SCREEN (PRESERVED CORE)
+    =================================================== -->
+    <main id="countdown-screen" class="scene is-active" data-scene="countdown">
+        <section class="keepsake-card glass-card" aria-label="Birthday countdown card">
+            <!-- Botanical Corner Flourishes -->
+            <span class="botanical-corner corner-tl" aria-hidden="true"></span>
+            <span class="botanical-corner corner-tr" aria-hidden="true"></span>
+            <span class="botanical-corner corner-bl" aria-hidden="true"></span>
+            <span class="botanical-corner corner-br" aria-hidden="true"></span>
+
+            <!-- Heading -->
+            <header class="countdown-header">
+                <p class="keepsake-eyebrow">Project Aye Aye Madam</p>
+                <h1>A Special Day Is Coming</h1>
+                <p class="countdown-subtitle">Just a little more time…</p>
+                <div class="ornament-divider" aria-hidden="true">
+                    <span class="ornament-line"></span>
+                    <span class="ornament-glyph">✦</span>
+                    <span class="ornament-line"></span>
+                </div>
+            </header>
+
+            <!-- Countdown Envelopes -->
+            <section class="countdown-container" aria-label="Birthday countdown">
+                <article class="time-box envelope" data-surface="days">
+                    <div class="envelope-flap" aria-hidden="true"></div>
+                    <div class="envelope-fold" aria-hidden="true"></div>
+                    <div class="wax-seal" aria-hidden="true"><span>♥</span></div>
+                    <div class="time-content">
+                        <span id="days" class="time-number">00</span>
+                        <small>Days</small>
+                    </div>
+                </article>
+
+                <article class="time-box envelope" data-surface="hours">
+                    <div class="envelope-flap" aria-hidden="true"></div>
+                    <div class="envelope-fold" aria-hidden="true"></div>
+                    <div class="wax-seal" aria-hidden="true"><span>♥</span></div>
+                    <div class="time-content">
+                        <span id="hours" class="time-number">00</span>
+                        <small>Hours</small>
+                    </div>
+                </article>
+
+                <article class="time-box envelope" data-surface="minutes">
+                    <div class="envelope-flap" aria-hidden="true"></div>
+                    <div class="envelope-fold" aria-hidden="true"></div>
+                    <div class="wax-seal" aria-hidden="true"><span>♥</span></div>
+                    <div class="time-content">
+                        <span id="minutes" class="time-number">00</span>
+                        <small>Minutes</small>
+                    </div>
+                </article>
+
+                <article class="time-box envelope" data-surface="seconds">
+                    <div class="envelope-flap" aria-hidden="true"></div>
+                    <div class="envelope-fold" aria-hidden="true"></div>
+                    <div class="wax-seal" aria-hidden="true"><span>♥</span></div>
+                    <div class="time-content">
+                        <span id="seconds" class="time-number">00</span>
+                        <small>Seconds</small>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Waiting Message -->
+            <p id="countdown-text">
+                This little keepsake is patiently waiting for the right moment.
+            </p>
+
+            <!-- Hero Note -->
+            <article class="hero-note" data-surface="hero-note">
+                <div class="note-title">
+                    <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="3" y="5" width="18" height="14" rx="2.5"></rect>
+                        <path d="M4 7l8 6 8-6"></path>
+                    </svg>
+                    <span>A Message From Your HERO</span>
+                </div>
+                <div class="note-content">
+                    <p>Be ready to <strong>LOSE THE BET!</strong> ❤️</p>
+                    <p>Your HERO has a surprise planned for his beloved. 😍</p>
+                </div>
+            </article>
+
+            <!-- Interactive Unlock Pill -->
+            <div class="unlock-wrapper">
+                <button
+                    type="button"
+                    class="unlock-box"
+                    id="unlock-pill"
+                    aria-describedby="unlock-toast"
+                >
+                    <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="5" y="11" width="14" height="10" rx="2.5"></rect>
+                        <path d="M8 11V7.5a4 4 0 0 1 8 0V11"></path>
+                    </svg>
+                    <span>Unlocks on <strong>16 January</strong></span>
+                </button>
+                <p id="unlock-toast" class="unlock-toast" role="status" aria-live="polite"></p>
+            </div>
+
+            <!-- Footer Message -->
+            <footer class="wait-message">
+                <div class="ornament-divider" aria-hidden="true">
+                    <span class="ornament-line"></span>
+                    <span class="ornament-glyph">♥</span>
+                    <span class="ornament-line"></span>
+                </div>
+                <p>SOME MOMENTS ARE WORTH THE WAIT</p>
+            </footer>
+        </section>
+    </main>
+
+    <!-- ==================================================
+         SCENE 2 — NEW CINEMATIC LOADING SCREEN
+    =================================================== -->
+    <section id="scene-loader" class="scene" data-scene="loader" aria-label="Opening keepsake presentation" hidden>
+        <div class="loader-atmosphere" aria-hidden="true">
+            <span class="loader-glow"></span>
+            <span class="loader-particle lp-1"></span>
+            <span class="loader-particle lp-2"></span>
+            <span class="loader-particle lp-3"></span>
+            <span class="loader-particle lp-4"></span>
+            <span class="loader-particle lp-5"></span>
+            <span class="loader-particle lp-6"></span>
+        </div>
+
+        <div class="loader-emblem-wrap">
+            <div class="loader-halo" aria-hidden="true"></div>
+            <svg class="floral-emblem" viewBox="0 0 160 160" fill="none" aria-hidden="true">
+                <!-- Outer delicate antique gold ring -->
+                <circle cx="80" cy="80" r="66" stroke="currentColor" stroke-width="0.9" stroke-dasharray="3 4" opacity="0.65"/>
+                <circle cx="80" cy="80" r="56" stroke="currentColor" stroke-width="0.8" opacity="0.45"/>
+                <!-- Botanical petals -->
+                <path d="M80 28 C89 44, 89 62, 80 76 C71 62, 71 44, 80 28 Z" stroke="currentColor" stroke-width="1.2" fill="rgba(232, 200, 203, 0.25)"/>
+                <path d="M80 132 C89 116, 89 98, 80 84 C71 98, 71 116, 80 132 Z" stroke="currentColor" stroke-width="1.2" fill="rgba(232, 200, 203, 0.25)"/>
+                <path d="M28 80 C44 71, 62 71, 76 80 C62 89, 44 89, 28 80 Z" stroke="currentColor" stroke-width="1.2" fill="rgba(220, 211, 233, 0.3)"/>
+                <path d="M132 80 C116 71, 98 71, 84 80 C98 89, 116 89, 132 80 Z" stroke="currentColor" stroke-width="1.2" fill="rgba(220, 211, 233, 0.3)"/>
+                <!-- Diagonal leaves -->
+                <path d="M44 44 C58 50, 68 60, 76 76 C60 68, 50 58, 44 44 Z" stroke="currentColor" stroke-width="1" opacity="0.78"/>
+                <path d="M116 44 C102 50, 92 60, 84 76 C100 68, 110 58, 116 44 Z" stroke="currentColor" stroke-width="1" opacity="0.78"/>
+                <path d="M44 116 C58 110, 68 100, 76 84 C60 92, 50 102, 44 116 Z" stroke="currentColor" stroke-width="1" opacity="0.78"/>
+                <path d="M116 116 C102 110, 92 100, 84 84 C100 92, 110 102, 116 116 Z" stroke="currentColor" stroke-width="1" opacity="0.78"/>
+                <!-- Centre medallion -->
+                <circle cx="80" cy="80" r="8" fill="rgba(195, 161, 107, 0.28)" stroke="currentColor" stroke-width="1.2"/>
+                <circle cx="80" cy="80" r="3" fill="currentColor"/>
+            </svg>
+            <p class="loader-whisper">The Enchanted Keepsake</p>
+        </div>
+    </section>
+
+    <!-- ==================================================
+         SCENE 3 — BIRTHDAY GREETING (INVITATION CARD)
+    =================================================== -->
+    <section
+        id="scene-greeting"
+        class="scene"
+        data-scene="greeting"
+        aria-label="Birthday greeting — tap anywhere to explore"
+        tabindex="0"
+        role="button"
+        hidden
+    >
+        <div class="greeting-invitation">
+            <div class="invitation-frame-outer">
+                <div class="invitation-frame-inner">
+                    <span class="botanical-corner corner-tl" aria-hidden="true"></span>
+                    <span class="botanical-corner corner-tr" aria-hidden="true"></span>
+                    <span class="botanical-corner corner-bl" aria-hidden="true"></span>
+                    <span class="botanical-corner corner-br" aria-hidden="true"></span>
+
+                    <!-- Top Botanical Crest -->
+                    <svg class="invitation-crest" viewBox="0 0 180 42" fill="none" aria-hidden="true">
+                        <path d="M16 24 C42 24, 58 14, 90 14 C122 14, 138 24, 164 24" stroke="currentColor" stroke-width="1" opacity="0.75"/>
+                        <path d="M90 6 C94 14, 94 20, 90 26 C86 20, 86 14, 90 6 Z" fill="rgba(232, 200, 203, 0.55)" stroke="currentColor" stroke-width="1"/>
+                        <circle cx="64" cy="18" r="2.2" fill="currentColor" opacity="0.7"/>
+                        <circle cx="116" cy="18" r="2.2" fill="currentColor" opacity="0.7"/>
+                        <path d="M44 21 C49 16, 56 16, 58 21 C53 23, 48 23, 44 21 Z" stroke="currentColor" stroke-width="0.9" opacity="0.65"/>
+                        <path d="M136 21 C131 16, 124 16, 122 21 C127 23, 132 23, 136 21 Z" stroke="currentColor" stroke-width="0.9" opacity="0.65"/>
+                    </svg>
+
+                    <p class="greeting-kicker">Sixteenth of January</p>
+
+                    <h1 class="greeting-title">Happy Birthday MY SWEETHEART 😘!</h1>
+
+                    <div class="ornament-divider greeting-divider" aria-hidden="true">
+                        <span class="ornament-line"></span>
+                        <span class="ornament-glyph">❦</span>
+                        <span class="ornament-line"></span>
+                    </div>
+
+                    <p class="greeting-prompt">tap to explore!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================================================
+         SCENE 4 — THREE INTERACTIVE VINTAGE ENVELOPES
+         (DIGITAL BOOK: ONE PROMINENT ENVELOPE PER PAGE)
+    =================================================== -->
+    <section id="scene-letters" class="scene" data-scene="letters" aria-label="Vintage letter collection" hidden>
+        <div class="book-shell">
+            <header class="book-topbar">
+                <span class="book-chapter">Letters From Your Hero</span>
+                <span id="letter-page-indicator" class="page-counter" aria-live="polite">01 / 03</span>
+            </header>
+
+            <div class="book-viewport" id="letter-swipe-area">
+                <div class="book-track" id="letter-track">
+
+                    <!-- ========== PAGE 01: BIRTHDAY LETTER (DUSTY ROSE) ========== -->
+                    <article class="letter-page is-current" data-page="0" data-letter-id="birthday-letter" data-theme="rose" aria-label="Letter 1 of 3: Birthday Letter">
+                        <!-- Closed / Animating 3D Vintage Envelope -->
+                        <div class="envelope-stage-wrap">
+                            <p class="envelope-eyebrow">Letter I</p>
+                            <h2 class="envelope-label">Birthday Letter</h2>
+
+                            <button
+                                type="button"
+                                class="vintage-envelope envelope-rose"
+                                data-open-envelope="0"
+                                aria-expanded="false"
+                                aria-label="Open Birthday Letter envelope"
+                            >
+                                <span class="env-shadow" aria-hidden="true"></span>
+                                <span class="env-back" aria-hidden="true"></span>
+
+                                <!-- Clipped inner pocket containing emerging letter sheet -->
+                                <span class="env-letter-slot" aria-hidden="true">
+                                    <span class="env-letter-sheet">
+                                        <span class="sheet-crest">✦ ❦ ✦</span>
+                                        <span class="sheet-heading">Birthday Letter</span>
+                                        <span class="sheet-rule"></span>
+                                        <span class="sheet-rule short"></span>
+                                        <span class="sheet-rule"></span>
+                                    </span>
+                                </span>
+
+                                <!-- Front folded pocket -->
+                                <span class="env-pocket-left" aria-hidden="true"></span>
+                                <span class="env-pocket-right" aria-hidden="true"></span>
+                                <span class="env-pocket-bottom" aria-hidden="true"></span>
+
+                                <!-- Delicate floral embossing on dusty rose stationery -->
+                                <svg class="env-ornament env-floral-emboss" viewBox="0 0 240 80" fill="none" aria-hidden="true">
+                                    <path d="M26 64 C66 34, 96 24, 120 24 C144 24, 174 34, 214 64" stroke="currentColor" stroke-width="1.1" opacity="0.45"/>
+                                    <path d="M56 46 C50 38, 54 31, 62 35 C60 40, 58 43, 56 46 Z" fill="currentColor" opacity="0.32"/>
+                                    <path d="M184 46 C190 38, 186 31, 178 35 C180 40, 182 43, 184 46 Z" fill="currentColor" opacity="0.32"/>
+                                    <circle cx="82" cy="34" r="2.5" fill="currentColor" opacity="0.4"/>
+                                    <circle cx="158" cy="34" r="2.5" fill="currentColor" opacity="0.4"/>
+                                </svg>
+
+                                <!-- 3D Top Flap -->
+                                <span class="env-flap-wrap" aria-hidden="true">
+                                    <span class="env-flap-front"></span>
+                                    <span class="env-flap-lining"></span>
+                                </span>
+
+                                <!-- Burgundy Heart-Shaped Wax Seal -->
+                                <span class="env-wax-seal seal-burgundy-heart" aria-hidden="true">
+                                    <span class="seal-glow"></span>
+                                    <span class="seal-half seal-half-left">
+                                        <svg viewBox="0 0 56 56" fill="none">
+                                            <path d="M28 49 C28 49 7 36 7 20.5 C7 13 13 8 19.8 8 C24 8 26.8 10.4 28 12.6 L28 49 Z" fill="#A66B64"/>
+                                            <path d="M28 42 C28 42 13 32.5 13 21.2 C13 16 17 12.8 21.5 12.8 C24.6 12.8 26.8 14.4 28 16.2 L28 42 Z" fill="#BC7E76" stroke="rgba(255,249,239,0.45)" stroke-width="1"/>
+                                        </svg>
+                                    </span>
+                                    <span class="seal-half seal-half-right">
+                                        <svg viewBox="0 0 56 56" fill="none">
+                                            <path d="M28 49 C28 49 49 36 49 20.5 C49 13 43 8 36.2 8 C32 8 29.2 10.4 28 12.6 L28 49 Z" fill="#995F58"/>
+                                            <path d="M28 42 C28 42 43 32.5 43 21.2 C43 16 39 12.8 34.5 12.8 C31.4 12.8 29.2 14.4 28 16.2 L28 42 Z" fill="#B2746C" stroke="rgba(255,249,239,0.45)" stroke-width="1"/>
+                                        </svg>
+                                    </span>
+                                </span>
+                            </button>
+
+                            <p class="envelope-cue">Touch the wax seal to break it open</p>
+                        </div>
+
+                        <!-- Opened Vintage Ivory Letter Sheet (Exact Original Content) -->
+                        <div class="letter-sheet-wrap" hidden>
+                            <div class="vintage-letter-paper" tabindex="0">
+                                <span class="paper-corner pc-tl" aria-hidden="true"></span>
+                                <span class="paper-corner pc-tr" aria-hidden="true"></span>
+                                <span class="paper-corner pc-bl" aria-hidden="true"></span>
+                                <span class="paper-corner pc-br" aria-hidden="true"></span>
+
+                                <header class="letter-sheet-header">
+                                    <span class="letter-crest" aria-hidden="true">✦ ❦ ✦</span>
+                                    <h3 class="letter-script-title">Birthday Letter</h3>
+                                </header>
+
+                                <div class="letter-body">
+                                    <p>Happiest Birthday MY SWEETHEART! 💗</p>
+                                    <p>Waiting for ts day for so long and today it is, my love 💕! I know it's not easy for you nor it is for me to be apart but I do feel that it wasn't your choice at all. I hope aap dawaiyan lena nahi bhulti hogi, waqt par khaana khate honge and paani bhi yaad se pi lete honge.</p>
+                                    <p>Yk what? I missed you every single day. In fact I've got tears while writing ts. Everyday I would up, I thought ki aap kaise honge. Jab mandir jaata toh sabse pehle aapke liye prayers karta ki, aap khush raho humesha...🥺🤍</p>
+                                    <p>You got all the love and care. You're worthy of my love. You stay in my heart and prayers 🥹. I promise to be yours forever, Pooja ❤️.You complete me 💐... You truly do 🥹... I love you, forever 💗🥹!</p>
+                                    <p>Happy Birthday 🎂🥹</p>
+                                </div>
+
+                                <footer class="letter-sheet-footer">
+                                    <button type="button" class="refold-btn" data-refold-envelope="0">Return to envelope</button>
+                                </footer>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- ========== PAGE 02: MISSING-YOU LETTER (VINTAGE LAVENDER) ========== -->
+                    <article class="letter-page" data-page="1" data-letter-id="miss-you-letter" data-theme="lavender" aria-label="Letter 2 of 3: Missing-you Letter" aria-hidden="true">
+                        <div class="envelope-stage-wrap">
+                            <p class="envelope-eyebrow">Letter II</p>
+                            <h2 class="envelope-label">Missing-you Letter</h2>
+
+                            <button
+                                type="button"
+                                class="vintage-envelope envelope-lavender"
+                                data-open-envelope="1"
+                                aria-expanded="false"
+                                aria-label="Open Missing-you Letter envelope"
+                            >
+                                <span class="env-shadow" aria-hidden="true"></span>
+                                <span class="env-back" aria-hidden="true"></span>
+
+                                <span class="env-letter-slot" aria-hidden="true">
+                                    <span class="env-letter-sheet">
+                                        <span class="sheet-crest">✦ ❦ ✦</span>
+                                        <span class="sheet-heading">Missing-you Letter</span>
+                                        <span class="sheet-rule"></span>
+                                        <span class="sheet-rule short"></span>
+                                        <span class="sheet-rule"></span>
+                                    </span>
+                                </span>
+
+                                <span class="env-pocket-left" aria-hidden="true"></span>
+                                <span class="env-pocket-right" aria-hidden="true"></span>
+                                <span class="env-pocket-bottom" aria-hidden="true"></span>
+
+                                <!-- Subtle ornamental filigree detailing -->
+                                <svg class="env-ornament env-filigree" viewBox="0 0 240 80" fill="none" aria-hidden="true">
+                                    <path d="M36 58 Q120 14 204 58" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3" opacity="0.55"/>
+                                    <path d="M58 58 Q120 26 182 58" stroke="currentColor" stroke-width="0.9" opacity="0.4"/>
+                                    <circle cx="120" cy="30" r="3" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+                                    <circle cx="78" cy="42" r="2" fill="currentColor" opacity="0.45"/>
+                                    <circle cx="162" cy="42" r="2" fill="currentColor" opacity="0.45"/>
+                                </svg>
+
+                                <span class="env-flap-wrap" aria-hidden="true">
+                                    <span class="env-flap-front"></span>
+                                    <span class="env-flap-lining"></span>
+                                </span>
+
+                                <!-- Antique Gold Wax Seal -->
+                                <span class="env-wax-seal seal-antique-gold" aria-hidden="true">
+                                    <span class="seal-glow"></span>
+                                    <span class="seal-half seal-half-left">
+                                        <svg viewBox="0 0 56 56" fill="none">
+                                            <path d="M28 5 A23 23 0 0 0 28 51 Z" fill="#C3A16B"/>
+                                            <path d="M28 11 A17 17 0 0 0 28 45 Z" fill="#D4B582" stroke="rgba(255,249,239,0.5)" stroke-width="1"/>
+                                            <circle cx="23" cy="28" r="2.2" fill="#FFF9EF" opacity="0.75"/>
+                                        </svg>
+                                    </span>
+                                    <span class="seal-half seal-half-right">
+                                        <svg viewBox="0 0 56 56" fill="none">
+                                            <path d="M28 5 A23 23 0 0 1 28 51 Z" fill="#B28F58"/>
+                                            <path d="M28 11 A17 17 0 0 1 28 45 Z" fill="#C7A672" stroke="rgba(255,249,239,0.5)" stroke-width="1"/>
+                                            <circle cx="33" cy="28" r="2.2" fill="#FFF9EF" opacity="0.75"/>
+                                        </svg>
+                                    </span>
+                                </span>
+                            </button>
+
+                            <p class="envelope-cue">Touch the wax seal to break it open</p>
+                        </div>
+
+                        <div class="letter-sheet-wrap" hidden>
+                            <div class="vintage-letter-paper" tabindex="0">
+                                <span class="paper-corner pc-tl" aria-hidden="true"></span>
+                                <span class="paper-corner pc-tr" aria-hidden="true"></span>
+                                <span class="paper-corner pc-bl" aria-hidden="true"></span>
+                                <span class="paper-corner pc-br" aria-hidden="true"></span>
+
+                                <header class="letter-sheet-header">
+                                    <span class="letter-crest" aria-hidden="true">✦ ❦ ✦</span>
+                                    <h3 class="letter-script-title">Missing-you Letter</h3>
+                                </header>
+
+                                <div class="letter-body">
+                                    <p>My love 💕💕💕,</p>
+                                    <p>I Love You 🥹🫶✨! You wanna hear a thousand times, I will say more than that, that I Love You! Everyday when I wake up, I feel like a part of me isn't with me... And that's you 💗. Most of the times, tears fall from my eyes because I miss you everyday. I miss you reminding me everyday to take care of myself, I miss your kisses and hugs, I miss your I love You texts and I miss my girl who completes me 🥹💖💝. Kisses and hugs to my Cutie Pie 🥰! And a reminder that you're special, as you're ✨💝! You don't need to be a different girl, you don't need to be at your best version to get my love ✨🫶! You're always gonna be same for me Pooja 🎀! Once again, Happy Birthday my heart ❤️! You're very special to me 🥹 💖! I Love You 💗✨!</p>
+                                    <p>MWAHHHHHHHHHH 😘 😘 😘!</p>
+                                </div>
+
+                                <footer class="letter-sheet-footer">
+                                    <button type="button" class="refold-btn" data-refold-envelope="1">Return to envelope</button>
+                                </footer>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- ========== PAGE 03: BOARDS LETTER (ANTIQUE IVORY) ========== -->
+                    <article class="letter-page" data-page="2" data-letter-id="boards-letter" data-theme="ivory" aria-label="Letter 3 of 3: Boards Letter" aria-hidden="true">
+                        <div class="envelope-stage-wrap">
+                            <p class="envelope-eyebrow">Letter III</p>
+                            <h2 class="envelope-label">Boards Letter</h2>
+
+                            <button
+                                type="button"
+                                class="vintage-envelope envelope-ivory"
+                                data-open-envelope="2"
+                                aria-expanded="false"
+                                aria-label="Open Boards Letter envelope"
+                            >
+                                <span class="env-shadow" aria-hidden="true"></span>
+                                <span class="env-back" aria-hidden="true"></span>
+
+                                <span class="env-letter-slot" aria-hidden="true">
+                                    <span class="env-letter-sheet">
+                                        <span class="sheet-crest">✦ ❦ ✦</span>
+                                        <span class="sheet-heading">Boards Letter</span>
+                                        <span class="sheet-rule"></span>
+                                        <span class="sheet-rule short"></span>
+                                        <span class="sheet-rule"></span>
+                                    </span>
+                                </span>
+
+                                <span class="env-pocket-left" aria-hidden="true"></span>
+                                <span class="env-pocket-right" aria-hidden="true"></span>
+                                <span class="env-pocket-bottom" aria-hidden="true"></span>
+
+                                <!-- Botanical border details -->
+                                <span class="env-botanical-border" aria-hidden="true"></span>
+                                <svg class="env-ornament env-botanical-sprig" viewBox="0 0 240 80" fill="none" aria-hidden="true">
+                                    <path d="M30 62 C68 48, 96 42, 120 42 C144 42, 172 48, 210 62" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+                                    <path d="M68 50 C63 42, 68 36, 75 41 Z" stroke="currentColor" stroke-width="0.9" opacity="0.5"/>
+                                    <path d="M172 50 C177 42, 172 36, 165 41 Z" stroke="currentColor" stroke-width="0.9" opacity="0.5"/>
+                                    <path d="M96 44 C92 37, 98 33, 103 39 Z" stroke="currentColor" stroke-width="0.9" opacity="0.45"/>
+                                    <path d="M144 44 C148 37, 142 33, 137 39 Z" stroke="currentColor" stroke-width="0.9" opacity="0.45"/>
+                                </svg>
+
+                                <span class="env-flap-wrap" aria-hidden="true">
+                                    <span class="env-flap-front"></span>
+                                    <span class="env-flap-lining"></span>
+                                </span>
+
+                                <!-- Muted Gold Wax Seal -->
+                                <span class="env-wax-seal seal-muted-gold" aria-hidden="true">
+                                    <span class="seal-glow"></span>
+                                    <span class="seal-half seal-half-left">
+                                        <svg viewBox="0 0 56 56" fill="none">
+                                            <path d="M28 6 L12 15 L12 41 L28 50 Z" fill="#B89B6D"/>
+                                            <path d="M28 12 L17 18 L17 38 L28 44 Z" fill="#C9AE82" stroke="rgba(255,249,239,0.5)" stroke-width="1"/>
+                                        </svg>
+                                    </span>
+                                    <span class="seal-half seal-half-right">
+                                        <svg viewBox="0 0 56 56" fill="none">
+                                            <path d="M28 6 L44 15 L44 41 L28 50 Z" fill="#A6895B"/>
+                                            <path d="M28 12 L39 18 L39 38 L28 44 Z" fill="#BA9E72" stroke="rgba(255,249,239,0.5)" stroke-width="1"/>
+                                        </svg>
+                                    </span>
+                                </span>
+                            </button>
+
+                            <p class="envelope-cue">Touch the wax seal to break it open</p>
+                        </div>
+
+                        <div class="letter-sheet-wrap" hidden>
+                            <div class="vintage-letter-paper" tabindex="0">
+                                <span class="paper-corner pc-tl" aria-hidden="true"></span>
+                                <span class="paper-corner pc-tr" aria-hidden="true"></span>
+                                <span class="paper-corner pc-bl" aria-hidden="true"></span>
+                                <span class="paper-corner pc-br" aria-hidden="true"></span>
+
+                                <header class="letter-sheet-header">
+                                    <span class="letter-crest" aria-hidden="true">✦ ❦ ✦</span>
+                                    <h3 class="letter-script-title">Boards Letter</h3>
+                                </header>
+
+                                <div class="letter-body">
+                                    <p>My dear 💖,</p>
+                                    <p>As your boards datesheet is out and ofc you're exams will start in a month now, I want you to remember that your worth doesn't depends on a marksheet or anything else. You always have to remember that you're capable of doing things your way. One of the things I learnt this year is that you don't decide your future in a day. You make it better everyday by staying consistent and smiling at the worst days of your life. Don't let your smile 😊 fade bcuz of an exam. Let exam be important but don't let an exam decide your worth. A piece of paper 📜 doesn't reflect your hardwork and dedication, when you were keep working on the hardest days of your life. Best of Luck 🤞 for your exams and I'll be waiting for you after your boards ends ✨💗!</p>
+                                    <p>Love you my sweetheart 🫶😘, and happy birthday 🎈 🎂!</p>
+                                </div>
+
+                                <footer class="letter-sheet-footer">
+                                    <button type="button" class="refold-btn" data-refold-envelope="2">Return to envelope</button>
+                                </footer>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+
+            <!-- Subtle Vintage Navigation Controls -->
+            <nav class="book-nav" aria-label="Letter page navigation">
+                <button type="button" class="nav-pill" id="letter-prev" aria-label="Previous letter">
+                    <span class="nav-arrow" aria-hidden="true">‹</span>
+                    <span class="nav-text">Previous</span>
+                </button>
+                <div class="nav-dots" aria-hidden="true">
+                    <span class="nav-dot is-active" data-dot="0"></span>
+                    <span class="nav-dot" data-dot="1"></span>
+                    <span class="nav-dot" data-dot="2"></span>
+                </div>
+                <button type="button" class="nav-pill" id="letter-next" aria-label="Next letter">
+                    <span class="nav-text">Next</span>
+                    <span class="nav-arrow" aria-hidden="true">›</span>
+                </button>
+            </nav>
+        </div>
+    </section>
+
+    <!-- ==================================================
+         SCENE 5 — HANGING PHOTO GALLERY (MEMORY ROOM)
+    =================================================== -->
+    <section id="scene-gallery" class="scene" data-scene="gallery" aria-label="Hanging photograph gallery" hidden>
+        <div class="gallery-shell">
+            <header class="gallery-topbar">
+                <span class="book-chapter">The Memory Room</span>
+                <span id="gallery-page-indicator" class="page-counter" aria-live="polite">01 / 05</span>
+            </header>
+
+            <div class="gallery-heading">
+                <h2>Little Moments, Preserved</h2>
+                <p>Tap any photograph to view it closer, or swipe gently through</p>
+            </div>
+
+            <!-- Overhead Twine & Fairy Bulbs -->
+            <div class="gallery-twine" aria-hidden="true">
+                <span class="twine-bulb"></span>
+                <span class="twine-bulb"></span>
+                <span class="twine-bulb"></span>
+                <span class="twine-bulb"></span>
+                <span class="twine-bulb"></span>
+            </div>
+
+            <!-- Swipeable Hanging Frames Track -->
+            <div class="gallery-viewport" id="gallery-swipe-area">
+                <div class="gallery-track" id="gallery-track">
+
+                    <div class="gallery-slide is-current" data-photo-index="0">
+                        <figure class="hanging-frame frame-1" tabindex="0" role="button" aria-label="Enlarge photograph 1 of 5: little sunshine">
+                            <span class="frame-string" aria-hidden="true"></span>
+                            <span class="frame-clip" aria-hidden="true"></span>
+                            <div class="frame-photo ratio-tall">
+                                <img src="assets/photos/pooja-photo-01.jpg" alt="Portrait photograph titled little sunshine" loading="eager" decoding="async">
+                            </div>
+                            <figcaption>little sunshine ☀️</figcaption>
+                        </figure>
+                    </div>
+
+                    <div class="gallery-slide" data-photo-index="1">
+                        <figure class="hanging-frame frame-2" tabindex="0" role="button" aria-label="Enlarge photograph 2 of 5: just being you">
+                            <span class="frame-string" aria-hidden="true"></span>
+                            <span class="frame-clip" aria-hidden="true"></span>
+                            <div class="frame-photo ratio-classic">
+                                <img src="assets/photos/pooja-photo-02.jpg" alt="Portrait photograph titled just being you" loading="lazy" decoding="async">
+                            </div>
+                            <figcaption>just being you ♡</figcaption>
+                        </figure>
+                    </div>
+
+                    <div class="gallery-slide" data-photo-index="2">
+                        <figure class="hanging-frame frame-3" tabindex="0" role="button" aria-label="Enlarge photograph 3 of 5: soft little moments">
+                            <span class="frame-string" aria-hidden="true"></span>
+                            <span class="frame-clip" aria-hidden="true"></span>
+                            <div class="frame-photo ratio-tall">
+                                <img src="assets/photos/pooja-photo-03.jpg" alt="Outdoor photograph titled soft little moments" loading="lazy" decoding="async">
+                            </div>
+                            <figcaption>soft little moments</figcaption>
+                        </figure>
+                    </div>
+
+                    <div class="gallery-slide" data-photo-index="3">
+                        <figure class="hanging-frame frame-4" tabindex="0" role="button" aria-label="Enlarge photograph 4 of 5: a rose for you">
+                            <span class="frame-string" aria-hidden="true"></span>
+                            <span class="frame-clip" aria-hidden="true"></span>
+                            <div class="frame-photo ratio-tall">
+                                <img src="assets/photos/pooja-photo-04.jpg" alt="Photograph with a rose titled a rose for you" loading="lazy" decoding="async">
+                            </div>
+                            <figcaption>a rose for you 🌹</figcaption>
+                        </figure>
+                    </div>
+
+                    <div class="gallery-slide" data-photo-index="4">
+                        <figure class="hanging-frame frame-5" tabindex="0" role="button" aria-label="Enlarge photograph 5 of 5: forever in a frame">
+                            <span class="frame-string" aria-hidden="true"></span>
+                            <span class="frame-clip" aria-hidden="true"></span>
+                            <div class="frame-photo ratio-tall">
+                                <img src="assets/photos/pooja-photo-05.jpg" alt="Vintage-style photograph titled forever in a frame" loading="lazy" decoding="async">
+                            </div>
+                            <figcaption>forever in a frame</figcaption>
+                        </figure>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Gallery Navigation Controls -->
+            <nav class="book-nav gallery-nav" aria-label="Photograph gallery navigation">
+                <button type="button" class="nav-pill" id="gallery-prev" aria-label="Previous photograph">
+                    <span class="nav-arrow" aria-hidden="true">‹</span>
+                    <span class="nav-text">Previous</span>
+                </button>
+                <div class="nav-dots" aria-hidden="true">
+                    <span class="nav-dot is-active" data-gdot="0"></span>
+                    <span class="nav-dot" data-gdot="1"></span>
+                    <span class="nav-dot" data-gdot="2"></span>
+                    <span class="nav-dot" data-gdot="3"></span>
+                    <span class="nav-dot" data-gdot="4"></span>
+                </div>
+                <button type="button" class="nav-pill" id="gallery-next" aria-label="Next photograph">
+                    <span class="nav-text">Next</span>
+                    <span class="nav-arrow" aria-hidden="true">›</span>
+                </button>
+            </nav>
+        </div>
+    </section>
+
+    <!-- ==================================================
+         SCENE 6 — FINAL BIRTHDAY MESSAGE
+    =================================================== -->
+    <section id="scene-final" class="scene" data-scene="final" aria-label="Final birthday message" hidden>
+        <div class="final-halo" aria-hidden="true"></div>
+
+        <article class="final-frame">
+            <div class="final-frame-inner">
+                <span class="botanical-corner corner-tl" aria-hidden="true"></span>
+                <span class="botanical-corner corner-tr" aria-hidden="true"></span>
+                <span class="botanical-corner corner-bl" aria-hidden="true"></span>
+                <span class="botanical-corner corner-br" aria-hidden="true"></span>
+
+                <svg class="final-crest" viewBox="0 0 140 36" fill="none" aria-hidden="true">
+                    <path d="M12 20 C36 20, 48 12, 70 12 C92 12, 104 20, 128 20" stroke="currentColor" stroke-width="1" opacity="0.72"/>
+                    <circle cx="70" cy="12" r="3.2" fill="currentColor" opacity="0.8"/>
+                    <circle cx="48" cy="16" r="1.8" fill="currentColor" opacity="0.6"/>
+                    <circle cx="92" cy="16" r="1.8" fill="currentColor" opacity="0.6"/>
+                </svg>
+
+                <div class="final-message-text">
+                    <p class="final-lead">I hope you liked it 🫶✨.</p>
+                    <p class="final-closing">Once again Happy Birthday to you and best of luck for your boards!</p>
+                </div>
+
+                <div class="ornament-divider final-divider" aria-hidden="true">
+                    <span class="ornament-line"></span>
+                    <span class="ornament-glyph">❦</span>
+                    <span class="ornament-line"></span>
+                </div>
+
+                <div class="final-return">
+                    <button type="button" class="nav-pill nav-pill-subtle" id="final-back" aria-label="Return to photograph gallery">
+                        <span class="nav-arrow" aria-hidden="true">‹</span>
+                        <span class="nav-text">Return to memories</span>
+                    </button>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <!-- ==================================================
+         ACCESSIBLE ENLARGED PHOTO LIGHTBOX
+    =================================================== -->
+    <div id="photo-lightbox" class="photo-lightbox" hidden role="dialog" aria-modal="true" aria-label="Enlarged photograph view">
+        <div class="lightbox-backdrop" aria-hidden="true"></div>
+        <div class="lightbox-card" id="lightbox-swipe-area">
+            <button type="button" class="lightbox-close" aria-label="Close enlarged photograph">×</button>
+            <div class="lightbox-media">
+                <img id="lightbox-img" src="" alt="">
+            </div>
+            <div class="lightbox-footer">
+                <button type="button" class="lightbox-nav lightbox-prev" aria-label="Previous photograph">‹</button>
+                <div class="lightbox-meta">
+                    <p id="lightbox-caption"></p>
+                    <span id="lightbox-counter" class="lightbox-counter" aria-live="polite"></span>
+                </div>
+                <button type="button" class="lightbox-nav lightbox-next" aria-label="Next photograph">›</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Single Clean Application Script -->
+    <script src="js/script.js"></script>
+</body>
+
+</html>
