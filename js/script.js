@@ -11,7 +11,7 @@
        ====================================================================== */
 
     // Preserved birthday unlock date in local device time
-    const UNLOCK_DATE = new Date("January 16, 2026 00:00:00").getTime();
+    const UNLOCK_DATE = new Date("November 16, 2026 00:00:00").getTime();
 
     const reducedMotionQuery =
         window.matchMedia &&
